@@ -1,7 +1,9 @@
 Foundations
-    init
-    window inside main window
-    buttons (+-x:)
-    buttons (blocks)
+    init                        OK
+    window inside main window   OK
+    buttons (+-x:)              OK
+    buttons (blocks)            OK
+    buttons collision           
+
 Calculation
 Levels
