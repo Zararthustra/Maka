@@ -3,29 +3,34 @@ Main module
 """
 import pygame
 from sys import exit
-import button
+import buttons
 from time import sleep
 
-pygame.init()
 #                                               GLOBAL VARIABLES
-# Screen
+
+    # Screen
+pygame.init()
 SCREEN_W = 1200
 SCREEN_H = 900
 screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
 pygame.display.set_caption('Maka')
 
-# Game
-
+    # Game
 GOAL = 19
+NUM1 = 5
+NUM2 = 7
+NUM3 = 4
+NUM4 = 2
+
+CURRENT_BUTTON = None
+CURRENT_NUM = None
 
 RUNNING = True
-CURRENT_BUTTON = None
-CURRENT_BLOCK = None
 RECTANGLE_DRAGING = False
 clock = pygame.time.Clock()
 BG_X = 0
 
-# Images
+    # Images
 BG_IMAGE1 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
 BG_IMAGE2 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
 BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
@@ -35,32 +40,33 @@ SUB_IMAGE = pygame.image.load('Maka/assets/moins.png').convert_alpha()
 MUL_IMAGE = pygame.image.load('Maka/assets/fois.png').convert_alpha()
 DIV_IMAGE = pygame.image.load('Maka/assets/divise.png').convert_alpha()
 
-BLOCK1_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num1.png').convert_alpha())
-BLOCK2_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num2.png').convert_alpha())
-BLOCK3_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num3.png').convert_alpha())
-BLOCK4_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num4.png').convert_alpha())
-
-# Fonts
+    # Fonts
 GAME_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 80)
+NUM_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
+
 TITLE_SURFACE = GAME_FONT.render("Maka", False, (255, 230, 230))
 TITLE_RECT = TITLE_SURFACE.get_rect(center = (475, 50))
 
 GOAL_FONT_SURFACE = GAME_FONT.render(f"{str(GOAL)}", False, (255, 255, 255))
 GOAL_FONT_RECT = GOAL_FONT_SURFACE.get_rect(center = (1050, 800))
-#
 
-# Buttons
-ADD_BUTTON = button.Button(990, 125, ADD_IMAGE, 0.4)
-SUB_BUTTON = button.Button(990, 275, SUB_IMAGE, 0.4)
-MUL_BUTTON = button.Button(990, 425, MUL_IMAGE, 0.4)
-DIV_BUTTON = button.Button(990, 575, DIV_IMAGE, 0.4)
+NUM1_FONT_SURFACE = NUM_FONT.render(f"{str(NUM1)}", False, (255, 0, 0))
+NUM2_FONT_SURFACE = NUM_FONT.render(f"{str(NUM2)}", False, (255, 0, 0))
+NUM3_FONT_SURFACE = NUM_FONT.render(f"{str(NUM3)}", False, (255, 0, 0))
+NUM4_FONT_SURFACE = NUM_FONT.render(f"{str(NUM4)}", False, (255, 0, 0))
 
-BLOCK1 = button.Button(200, 200, BLOCK1_IMAGE, 0.5)
-BLOCK2 = button.Button(650, 200, BLOCK2_IMAGE, 0.5)
-BLOCK3 = button.Button(200, 500, BLOCK3_IMAGE, 0.5)
-BLOCK4 = button.Button(650, 500, BLOCK4_IMAGE, 0.5)
+    # Buttons
+ADD_BUTTON = buttons.ImageButton(990, 125, ADD_IMAGE, 0.4)
+SUB_BUTTON = buttons.ImageButton(990, 275, SUB_IMAGE, 0.4)
+MUL_BUTTON = buttons.ImageButton(990, 425, MUL_IMAGE, 0.4)
+DIV_BUTTON = buttons.ImageButton(990, 575, DIV_IMAGE, 0.4)
 
-# Display funcs
+NUM1_BUTTON = buttons.FontButton(200, 200, NUM1_FONT_SURFACE, 1)
+NUM2_BUTTON = buttons.FontButton(650, 200, NUM2_FONT_SURFACE, 1)
+NUM3_BUTTON = buttons.FontButton(200, 500, NUM3_FONT_SURFACE, 1)
+NUM4_BUTTON = buttons.FontButton(650, 500, NUM4_FONT_SURFACE, 1)
+
+#                                               DISPLAY FUNCS
 def display_BG():
     global BG_X
     #Endless moving BG
@@ -91,7 +97,6 @@ def display_inner_windows():
     """inner4 = pygame.Surface((200, 100)).fill((0, 0, 0))
     inner4.topleft = (950, 750)
     pygame.draw.rect(screen, (60, 50, 50), inner4, 0, 0, 0, 20, 20, 20)"""
-    
 
 def display_operands_buttons():
     global CURRENT_BUTTON
@@ -114,27 +119,27 @@ def display_operands_buttons():
         pygame.draw.rect(screen, (120, 0, 155), CURRENT_BUTTON.rect, 4)
 
 def display_blocks():
-    global CURRENT_BLOCK
+    global CURRENT_NUM
     #Draw button
-    BLOCK1.draw(screen)
-    BLOCK2.draw(screen)
-    BLOCK3.draw(screen)
-    BLOCK4.draw(screen)
+    NUM1_BUTTON.draw(screen)
+    NUM2_BUTTON.draw(screen)
+    NUM3_BUTTON.draw(screen)
+    NUM4_BUTTON.draw(screen)
     #Save clicked button
-    if BLOCK1.clicked:
-        CURRENT_BLOCK = BLOCK1
-    if BLOCK2.clicked:
-        CURRENT_BLOCK = BLOCK2
-    if BLOCK3.clicked:
-        CURRENT_BLOCK = BLOCK3
-    if BLOCK4.clicked:
-        CURRENT_BLOCK = BLOCK4
+    if NUM1_BUTTON.clicked:
+        CURRENT_NUM = NUM1_BUTTON
+    if NUM2_BUTTON.clicked:
+        CURRENT_NUM = NUM2_BUTTON
+    if NUM3_BUTTON.clicked:
+        CURRENT_NUM = NUM3_BUTTON
+    if NUM4_BUTTON.clicked:
+        CURRENT_NUM = NUM4_BUTTON
     #Highlighting
-    if CURRENT_BLOCK:
-        pygame.draw.rect(screen, (0, 120, 155), CURRENT_BLOCK.rect, 4)
+    if CURRENT_NUM:
+        pygame.draw.rect(screen, (0, 120, 155), CURRENT_NUM.rect, 4)
 
 
-#                                                   MAIN LOOP
+#                                               MAIN LOOP
 while RUNNING:
 
     clock.tick(120)
@@ -143,15 +148,16 @@ while RUNNING:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if CURRENT_BLOCK:
-            BLOCK = CURRENT_BLOCK.rect
+        #Handle the drag & drop mechanic for NUM_BUTTONS
+        if CURRENT_NUM:
+            NUM = CURRENT_NUM.rect
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if BLOCK.collidepoint(event.pos):
+                    if NUM.collidepoint(event.pos):
                         RECTANGLE_DRAGING = True
                         mouse_x, mouse_y = event.pos
-                        offset_x = BLOCK.x - mouse_x
-                        offset_y = BLOCK.y - mouse_y
+                        offset_x = NUM.x - mouse_x
+                        offset_y = NUM.y - mouse_y
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:            
@@ -161,8 +167,8 @@ while RUNNING:
                 if RECTANGLE_DRAGING:
                     mouse_x, mouse_y = event.pos
                     if 50 < mouse_x < 900 and 100 < mouse_y < 700: 
-                        BLOCK.x = mouse_x + offset_x
-                        BLOCK.y = mouse_y + offset_y
+                        NUM.x = mouse_x + offset_x
+                        NUM.y = mouse_y + offset_y
     
     display_BG()
     screen.blit(TITLE_SURFACE, TITLE_RECT)
@@ -170,4 +176,5 @@ while RUNNING:
     display_blocks()
     display_operands_buttons()
     screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
+    
     pygame.display.flip()
