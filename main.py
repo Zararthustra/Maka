@@ -6,45 +6,54 @@ from sys import exit
 import button
 from time import sleep
 
-
+pygame.init()
 #                                               GLOBAL VARIABLES
 # Screen
 SCREEN_W = 1200
 SCREEN_H = 900
-INNER_SCREEN_S = 500
-MARGIN_LEFT = 50
-MARGIN_TOP = 100
-MARGIN_RIGHT = 350
-MARGIN_BOT = 300
-
 screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
 pygame.display.set_caption('Maka')
 
 # Game
+
+GOAL = 19
+
 RUNNING = True
 CURRENT_BUTTON = None
 CURRENT_BLOCK = None
 RECTANGLE_DRAGING = False
 clock = pygame.time.Clock()
+BG_X = 0
 
 # Images
-BG_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
+BG_IMAGE1 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
+BG_IMAGE2 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
+BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
 
-ADD_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/plus.png').convert_alpha())
-SUB_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/moins.png').convert_alpha())
-MUL_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/fois.png').convert_alpha())
-DIV_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/divise.png').convert_alpha())
+ADD_IMAGE = pygame.image.load('Maka/assets/plus.png').convert_alpha()
+SUB_IMAGE = pygame.image.load('Maka/assets/moins.png').convert_alpha()
+MUL_IMAGE = pygame.image.load('Maka/assets/fois.png').convert_alpha()
+DIV_IMAGE = pygame.image.load('Maka/assets/divise.png').convert_alpha()
 
 BLOCK1_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num1.png').convert_alpha())
 BLOCK2_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num2.png').convert_alpha())
 BLOCK3_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num3.png').convert_alpha())
 BLOCK4_IMAGE = pygame.transform.scale2x(pygame.image.load('Maka/assets/num4.png').convert_alpha())
 
+# Fonts
+GAME_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 80)
+TITLE_SURFACE = GAME_FONT.render("Maka", False, (255, 230, 230))
+TITLE_RECT = TITLE_SURFACE.get_rect(center = (475, 50))
+
+GOAL_FONT_SURFACE = GAME_FONT.render(f"{str(GOAL)}", False, (255, 255, 255))
+GOAL_FONT_RECT = GOAL_FONT_SURFACE.get_rect(center = (1050, 800))
+#
+
 # Buttons
-ADD_BUTTON = button.Button(990, 125, ADD_IMAGE, 0.5)
-SUB_BUTTON = button.Button(990, 275, SUB_IMAGE, 0.5)
-MUL_BUTTON = button.Button(990, 425, MUL_IMAGE, 0.5)
-DIV_BUTTON = button.Button(990, 575, DIV_IMAGE, 0.5)
+ADD_BUTTON = button.Button(990, 125, ADD_IMAGE, 0.4)
+SUB_BUTTON = button.Button(990, 275, SUB_IMAGE, 0.4)
+MUL_BUTTON = button.Button(990, 425, MUL_IMAGE, 0.4)
+DIV_BUTTON = button.Button(990, 575, DIV_IMAGE, 0.4)
 
 BLOCK1 = button.Button(200, 200, BLOCK1_IMAGE, 0.5)
 BLOCK2 = button.Button(650, 200, BLOCK2_IMAGE, 0.5)
@@ -53,29 +62,36 @@ BLOCK4 = button.Button(650, 500, BLOCK4_IMAGE, 0.5)
 
 # Display funcs
 def display_BG():
-    screen.blit(BG_IMAGE, (0, 0))
+    global BG_X
+    #Endless moving BG
+    screen.blit(BG_IMAGE1, (BG_X, 0))
+    screen.blit(BG_IMAGE2, (BG_X + 2000, 0))
+    screen.blit(BG_IMAGE1, (BG_X + 4000, 0))
+    BG_X -= 2
+    if BG_X <= - 4000:
+        BG_X = 0
 
 def display_inner_windows():
-    #Blocks
+    #Blocks window
     inner1 = pygame.Surface((850, 600)).fill((0, 0, 0))
     inner1.x = 50
     inner1.y = 100
     pygame.draw.rect(screen, (60, 50, 50), inner1, 0, 0, 20, 20, 20, 0)
-    #Operands
-    inner2 = pygame.Surface((200, 600)).fill((0, 0, 0))
+    #Operands window
+    """inner2 = pygame.Surface((200, 600)).fill((0, 0, 0))
     inner2.x = 950
     inner2.y = 100
-    pygame.draw.rect(screen, (60, 50, 50), inner2, 0, 0, 20, 20, 0, 20)
-    #Result
+    pygame.draw.rect(screen, (60, 50, 50), inner2, 0, 0, 20, 20, 0, 20)"""
+    #Result window
     inner3 = pygame.Surface((850, 100)).fill((0, 0, 0))
     inner3.x = 50
     inner3.y = 750
     pygame.draw.rect(screen, (60, 50, 50), inner3, 0, 0, 20, 0, 20, 20)
-    #Goal
-    inner4 = pygame.Surface((200, 100)).fill((0, 0, 0))
-    inner4.x = 950
-    inner4.y = 750
-    pygame.draw.rect(screen, (60, 50, 50), inner4, 0, 0, 0, 20, 20, 20)
+    #Goal window
+    """inner4 = pygame.Surface((200, 100)).fill((0, 0, 0))
+    inner4.topleft = (950, 750)
+    pygame.draw.rect(screen, (60, 50, 50), inner4, 0, 0, 0, 20, 20, 20)"""
+    
 
 def display_operands_buttons():
     global CURRENT_BUTTON
@@ -117,6 +133,7 @@ def display_blocks():
     if CURRENT_BLOCK:
         pygame.draw.rect(screen, (0, 120, 155), CURRENT_BLOCK.rect, 4)
 
+
 #                                                   MAIN LOOP
 while RUNNING:
 
@@ -143,12 +160,14 @@ while RUNNING:
             elif event.type == pygame.MOUSEMOTION:
                 if RECTANGLE_DRAGING:
                     mouse_x, mouse_y = event.pos
-                    BLOCK.x = mouse_x + offset_x
-                    BLOCK.y = mouse_y + offset_y
+                    if 50 < mouse_x < 900 and 100 < mouse_y < 700: 
+                        BLOCK.x = mouse_x + offset_x
+                        BLOCK.y = mouse_y + offset_y
     
     display_BG()
+    screen.blit(TITLE_SURFACE, TITLE_RECT)
     display_inner_windows()
     display_blocks()
     display_operands_buttons()
-
+    screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
     pygame.display.flip()
