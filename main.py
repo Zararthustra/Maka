@@ -35,25 +35,19 @@ BG_IMAGE1 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').co
 BG_IMAGE2 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
 BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
 
-ADD_IMAGE = pygame.image.load('Maka/assets/plus.png').convert_alpha()
-SUB_IMAGE = pygame.image.load('Maka/assets/moins.png').convert_alpha()
-MUL_IMAGE = pygame.image.load('Maka/assets/fois.png').convert_alpha()
-DIV_IMAGE = pygame.image.load('Maka/assets/divise.png').convert_alpha()
+ADD_IMAGE = pygame.image.load('Maka/assets/add.png').convert_alpha()
+SUB_IMAGE = pygame.image.load('Maka/assets/sub.png').convert_alpha()
+MUL_IMAGE = pygame.image.load('Maka/assets/mul.png').convert_alpha()
+DIV_IMAGE = pygame.image.load('Maka/assets/div.png').convert_alpha()
 
     # Fonts
 GAME_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 80)
-NUM_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
-
+#Title
 TITLE_SURFACE = GAME_FONT.render("Maka", False, (255, 230, 230))
 TITLE_RECT = TITLE_SURFACE.get_rect(center = (475, 50))
-
-GOAL_FONT_SURFACE = GAME_FONT.render(f"{str(GOAL)}", False, (255, 255, 255))
+#Goal
+GOAL_FONT_SURFACE = GAME_FONT.render(str(GOAL), False, (255, 255, 255))
 GOAL_FONT_RECT = GOAL_FONT_SURFACE.get_rect(center = (1050, 800))
-
-NUM1_FONT_SURFACE = NUM_FONT.render(f"{str(NUM1)}", False, (255, 0, 0))
-NUM2_FONT_SURFACE = NUM_FONT.render(f"{str(NUM2)}", False, (255, 0, 0))
-NUM3_FONT_SURFACE = NUM_FONT.render(f"{str(NUM3)}", False, (255, 0, 0))
-NUM4_FONT_SURFACE = NUM_FONT.render(f"{str(NUM4)}", False, (255, 0, 0))
 
     # Buttons
 ADD_BUTTON = buttons.ImageButton(990, 125, ADD_IMAGE, 0.4)
@@ -61,10 +55,10 @@ SUB_BUTTON = buttons.ImageButton(990, 275, SUB_IMAGE, 0.4)
 MUL_BUTTON = buttons.ImageButton(990, 425, MUL_IMAGE, 0.4)
 DIV_BUTTON = buttons.ImageButton(990, 575, DIV_IMAGE, 0.4)
 
-NUM1_BUTTON = buttons.FontButton(200, 200, NUM1_FONT_SURFACE, 1)
-NUM2_BUTTON = buttons.FontButton(650, 200, NUM2_FONT_SURFACE, 1)
-NUM3_BUTTON = buttons.FontButton(200, 500, NUM3_FONT_SURFACE, 1)
-NUM4_BUTTON = buttons.FontButton(650, 500, NUM4_FONT_SURFACE, 1)
+NUM1_BUTTON = buttons.FontButton(200, 200, NUM1, 1)
+NUM2_BUTTON = buttons.FontButton(650, 200, NUM2, 1)
+NUM3_BUTTON = buttons.FontButton(200, 500, NUM3, 1)
+NUM4_BUTTON = buttons.FontButton(650, 500, NUM4, 1)
 
 #                                               DISPLAY FUNCS
 def display_BG():
@@ -118,7 +112,7 @@ def display_operands_buttons():
     if CURRENT_BUTTON:
         pygame.draw.rect(screen, (120, 0, 155), CURRENT_BUTTON.rect, 4)
 
-def display_blocks():
+def display_nums():
     global CURRENT_NUM
     #Draw button
     NUM1_BUTTON.draw(screen)
@@ -137,6 +131,10 @@ def display_blocks():
     #Highlighting
     if CURRENT_NUM:
         pygame.draw.rect(screen, (0, 120, 155), CURRENT_NUM.rect, 4)
+        if CURRENT_NUM.rect.colliderect(NUM1_BUTTON.rect):
+            print("Fusion -> New rect")
+
+            
 
 
 #                                               MAIN LOOP
@@ -170,11 +168,15 @@ while RUNNING:
                         NUM.x = mouse_x + offset_x
                         NUM.y = mouse_y + offset_y
     
+
     display_BG()
     screen.blit(TITLE_SURFACE, TITLE_RECT)
     display_inner_windows()
-    display_blocks()
+    display_nums()
     display_operands_buttons()
     screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
-    
+    """if NUM1_BUTTON.rect.colliderect(NUM2_BUTTON.rect):
+        new = NUM1_BUTTON.rect.union(NUM2_BUTTON.rect)
+        pygame.draw.rect(screen, (0, 0, 0), new)"""
+
     pygame.display.flip()

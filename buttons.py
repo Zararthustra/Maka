@@ -3,6 +3,7 @@ Button class
 """
 import pygame
 
+pygame.init()
 
 class ImageButton():
     """
@@ -12,9 +13,9 @@ class ImageButton():
     def __init__(self, x, y, image_surface, scale):
         """constructor"""
 
-        width = image.get_width()
-        height = image.get_height()
-        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        width = image_surface.get_width()
+        height = image_surface.get_height()
+        self.image = pygame.transform.scale(image_surface, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
@@ -36,18 +37,21 @@ class ImageButton():
 
         return action
 
+FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
+
 class FontButton():
     """
     Define button class for a font
     """
-
-    def __init__(self, x, y, font_surface, scale):
+    def __init__(self, x, y, num, scale):
         """constructor"""
 
-        width = font_surface.get_width()
-        height = font_surface.get_height()
-        self.font_surface = pygame.transform.scale(font_surface, (int(width * scale), int(height * scale)))
-        self.rect = self.font_surface.get_rect()
+        self.num = num
+        self.surface = FONT.render(str(self.num), False, (255, 0, 0))
+        width = self.surface.get_width()
+        height = self.surface.get_height()
+        self.scaled = pygame.transform.scale(self.surface, (int(width * scale), int(height * scale)))
+        self.rect = self.scaled.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
 
@@ -64,6 +68,6 @@ class FontButton():
                 self.clicked = True
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
-        surface.blit(self.image, (self.rect.x, self.rect.y))
+        surface.blit(self.scaled, (self.rect.x, self.rect.y))
 
         return action

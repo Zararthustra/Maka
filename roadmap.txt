@@ -2,8 +2,8 @@ Foundations
     init                        OK
     window inside main window   OK
     buttons (+-x:)              OK
-    buttons (blocks)            OK
-    buttons collision           
+    buttons (nums)              OK
+    buttons collision->fusion                 
 
 Calculation
 Levels
