@@ -60,6 +60,9 @@ NUM2_BUTTON = buttons.FontButton(650, 200, NUM2, 1)
 NUM3_BUTTON = buttons.FontButton(200, 500, NUM3, 1)
 NUM4_BUTTON = buttons.FontButton(650, 500, NUM4, 1)
 
+NUM_GROUP = pygame.sprite.Group()
+NUM_GROUP.add(NUM1_BUTTON, NUM2_BUTTON, NUM3_BUTTON, NUM4_BUTTON)
+
 #                                               DISPLAY FUNCS
 def display_BG():
     global BG_X
@@ -115,18 +118,15 @@ def display_operands_buttons():
 def display_nums():
     global CURRENT_NUM
     #Draw button
-    NUM1_BUTTON.draw(screen)
-    NUM2_BUTTON.draw(screen)
-    NUM3_BUTTON.draw(screen)
-    NUM4_BUTTON.draw(screen)
+    NUM_GROUP.draw(screen)
     #Save clicked button
-    if NUM1_BUTTON.clicked:
+    if NUM1_BUTTON.update():
         CURRENT_NUM = NUM1_BUTTON
-    if NUM2_BUTTON.clicked:
+    if NUM2_BUTTON.update():
         CURRENT_NUM = NUM2_BUTTON
-    if NUM3_BUTTON.clicked:
+    if NUM3_BUTTON.update():
         CURRENT_NUM = NUM3_BUTTON
-    if NUM4_BUTTON.clicked:
+    if NUM4_BUTTON.update():
         CURRENT_NUM = NUM4_BUTTON
     #Highlighting
     if CURRENT_NUM:
@@ -140,7 +140,6 @@ def display_nums():
 #                                               MAIN LOOP
 while RUNNING:
 
-    clock.tick(120)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -175,8 +174,6 @@ while RUNNING:
     display_nums()
     display_operands_buttons()
     screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
-    """if NUM1_BUTTON.rect.colliderect(NUM2_BUTTON.rect):
-        new = NUM1_BUTTON.rect.union(NUM2_BUTTON.rect)
-        pygame.draw.rect(screen, (0, 0, 0), new)"""
 
     pygame.display.flip()
+    clock.tick(120)

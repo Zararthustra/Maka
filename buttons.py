@@ -39,35 +39,37 @@ class ImageButton():
 
 FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
 
-class FontButton():
+class FontButton(pygame.sprite.Sprite):
     """
     Define button class for a font
     """
     def __init__(self, x, y, num, scale):
         """constructor"""
 
+        super().__init__()
         self.num = num
-        self.surface = FONT.render(str(self.num), False, (255, 0, 0))
-        width = self.surface.get_width()
-        height = self.surface.get_height()
-        self.scaled = pygame.transform.scale(self.surface, (int(width * scale), int(height * scale)))
-        self.rect = self.scaled.get_rect()
+        font = FONT.render(str(self.num), False, (255, 0, 0))
+        width = font.get_width()
+        height = font.get_height()
+        self.image = pygame.transform.scale(font, (int(width * scale), int(height * scale)))
+        self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
 
-    def draw(self, surface):
+    def update(self):
+        #from main import NUM_GROUP
         """draw button and handle if clicked or not"""
 
-        action = False
         pos = pygame.mouse.get_pos()
 
 		#check mouseover and clicked conditions
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                action = True
                 self.clicked = True
+                return self.clicked
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
-        surface.blit(self.scaled, (self.rect.x, self.rect.y))
+            return self.clicked
+        #pygame.sprite.spritecollide(self, NUM_GROUP, True)
 
-        return action
+    
