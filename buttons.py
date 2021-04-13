@@ -1,5 +1,5 @@
 """
-Button class
+Button module for operands and nums
 """
 import pygame
 pygame.init()
@@ -68,7 +68,12 @@ class NumButton(pygame.sprite.Sprite):
     def update(self):
         """Update surface when the number has changed"""
         load_font = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
-        font_surface = load_font.render(str(self.num), False, (255, 0, 0))
+        
+        if self.clicked:
+            font_surface = load_font.render(str(self.num), False, (0, 200, 255))
+        else:
+            font_surface = load_font.render(str(self.num), False, (70, 0, 255))
+
         width = font_surface.get_width()
         height = font_surface.get_height()
 

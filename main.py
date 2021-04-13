@@ -12,20 +12,21 @@ from time import sleep
     # Screen
 pygame.init()
 SCREEN_W = 1200
-SCREEN_H = 900
+SCREEN_H = 900 #need to resize to 600
 screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
 pygame.display.set_caption('Maka')
 
     # Game
 GAME = "running"
-GOAL = 24
-NUM1 = 1
+GOAL = 31
+NUM1 = 6
 NUM2 = 2
-NUM3 = 3
-NUM4 = 4
+NUM3 = 10
+NUM4 = 7
 
 CURRENT_OP = None
 CURRENT_NUM = None
+COLLIDED_NUM = None
 RUNNING = True
 
 clock = pygame.time.Clock()
@@ -45,7 +46,7 @@ DIV_IMAGE = pygame.image.load('Maka/assets/div.png').convert_alpha()
     # Fonts
 GAME_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 80)
 #Title
-TITLE_SURFACE = GAME_FONT.render("Maka", False, (255, 230, 230))
+TITLE_SURFACE = GAME_FONT.render("Level 1", False, (255, 230, 230))
 TITLE_RECT = TITLE_SURFACE.get_rect(center = (475, 50))
 #Goal
 GOAL_FONT_SURFACE = GAME_FONT.render(str(GOAL), False, (255, 255, 255))
@@ -78,18 +79,12 @@ def display_BG():
     if BG_X <= - 4000:
         BG_X = 0
 
-def display_inner_windows():
-    """Display inner grey windows"""
-    #Nums window
+def display_inner_window():
+    """Display the inner grey window"""
     inner1 = pygame.Surface((850, 600)).fill((0, 0, 0))
     inner1.x = 50
     inner1.y = 100
-    pygame.draw.rect(screen, (60, 50, 50), inner1, 0, 0, 20, 20, 20, 0)
-    #Result window
-    inner3 = pygame.Surface((850, 100)).fill((0, 0, 0))
-    inner3.x = 50
-    inner3.y = 750
-    pygame.draw.rect(screen, (60, 50, 50), inner3, 0, 0, 20, 0, 20, 20)
+    pygame.draw.rect(screen, (60, 50, 50), inner1, 0, 0, 20, 20, 20, 20)
 
 def display_operands_buttons():
     """Display and save the current operand button""" 
@@ -119,9 +114,22 @@ def display_nums():
         if num.get_clicked():
             CURRENT_NUM = num
 
+def display_remain():
+    """Display number remaining to reach goal, during calculation"""
+    remain = GOAL - CURRENT_NUM.num if CURRENT_NUM else GOAL
+    curr = CURRENT_NUM.num if CURRENT_NUM else 0
+    result = "From {}, {} is remaining to reach {}".format(curr, remain, GOAL)
+
+    font = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 55)
+    surface = font.render(str(result), False, (255, 255, 255))
+    rect = surface.get_rect(topleft = (50, 765))
+    screen.blit(surface, rect)
+
+
 def collide_nums():
     """Check collision and compute solution"""
     global CURRENT_NUM
+    global COLLIDED_NUM
     other_nums = [num1, num2, num3, num4]
 
     if not CURRENT_NUM:
@@ -131,6 +139,7 @@ def collide_nums():
     if CURRENT_OP:
         for other_num in other_nums:
             if CURRENT_NUM.rect.colliderect(other_num.rect):
+                COLLIDED_NUM = other_num.num
                 if CURRENT_OP == ADD_BUTTON:
                     CURRENT_NUM.num += other_num.num
                     # Throwing the rect far away from screen because :
@@ -196,10 +205,10 @@ def main():
         if game == "running":
             display_BG()
             screen.blit(TITLE_SURFACE, TITLE_RECT)
-            display_inner_windows()
+            display_inner_window()
             display_nums()
             display_operands_buttons()
-            screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
+            display_remain()
             if collide_nums():
                 game = game_state(game)
         elif game == "won":
