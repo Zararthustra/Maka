@@ -4,6 +4,7 @@ Main module
 import pygame
 from sys import exit
 import buttons
+from Manager import Manager
 from time import sleep
 
 #                                               GLOBAL VARIABLES
@@ -17,24 +18,25 @@ pygame.display.set_caption('Maka')
 
     # Game
 GOAL = 19
-NUM1 = 5
-NUM2 = 7
-NUM3 = 4
-NUM4 = 2
+NUM1 = 1
+NUM2 = 2
+NUM3 = 3
+NUM4 = 4
 
 CURRENT_BUTTON = None
 CURRENT_NUM = None
-
 RUNNING = True
 RECTANGLE_DRAGING = False
+
 clock = pygame.time.Clock()
 BG_X = 0
 
     # Images
+#Background
 BG_IMAGE1 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
 BG_IMAGE2 = pygame.transform.scale2x(pygame.image.load('Maka/assets/BG.JFIF').convert_alpha())
 BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
-
+#Operands
 ADD_IMAGE = pygame.image.load('Maka/assets/add.png').convert_alpha()
 SUB_IMAGE = pygame.image.load('Maka/assets/sub.png').convert_alpha()
 MUL_IMAGE = pygame.image.load('Maka/assets/mul.png').convert_alpha()
@@ -50,18 +52,17 @@ GOAL_FONT_SURFACE = GAME_FONT.render(str(GOAL), False, (255, 255, 255))
 GOAL_FONT_RECT = GOAL_FONT_SURFACE.get_rect(center = (1050, 800))
 
     # Buttons
+#Operands
 ADD_BUTTON = buttons.ImageButton(990, 125, ADD_IMAGE, 0.4)
 SUB_BUTTON = buttons.ImageButton(990, 275, SUB_IMAGE, 0.4)
 MUL_BUTTON = buttons.ImageButton(990, 425, MUL_IMAGE, 0.4)
 DIV_BUTTON = buttons.ImageButton(990, 575, DIV_IMAGE, 0.4)
-
-NUM1_BUTTON = buttons.FontButton(200, 200, NUM1, 1)
-NUM2_BUTTON = buttons.FontButton(650, 200, NUM2, 1)
-NUM3_BUTTON = buttons.FontButton(200, 500, NUM3, 1)
-NUM4_BUTTON = buttons.FontButton(650, 500, NUM4, 1)
-
-NUM_GROUP = pygame.sprite.Group()
-NUM_GROUP.add(NUM1_BUTTON, NUM2_BUTTON, NUM3_BUTTON, NUM4_BUTTON)
+#Nums
+num_group = Manager()
+num1 = num_group.create_num_button(200, 200, NUM1)
+num2 = num_group.create_num_button(650, 200, NUM2)
+num3 = num_group.create_num_button(200, 500, NUM3)
+num4 = num_group.create_num_button(650, 500, NUM4)
 
 #                                               DISPLAY FUNCS
 def display_BG():
@@ -117,63 +118,66 @@ def display_operands_buttons():
 
 def display_nums():
     global CURRENT_NUM
-    #Draw button
-    NUM_GROUP.draw(screen)
-    #Save clicked button
-    if NUM1_BUTTON.update():
-        CURRENT_NUM = NUM1_BUTTON
-    if NUM2_BUTTON.update():
-        CURRENT_NUM = NUM2_BUTTON
-    if NUM3_BUTTON.update():
-        CURRENT_NUM = NUM3_BUTTON
-    if NUM4_BUTTON.update():
-        CURRENT_NUM = NUM4_BUTTON
-    #Highlighting
+    other_nums = [num1, num2, num3, num4]
+    #Draw updated nums
+    num_group.all_nums.update()
+    num_group.draw(screen)
+    #Save the clicked button to CURRENT_NUM
+    nums = num_group.all_nums
+    for num in nums:
+        if num.get_clicked(screen):
+            CURRENT_NUM = num
+
     if CURRENT_NUM:
-        pygame.draw.rect(screen, (0, 120, 155), CURRENT_NUM.rect, 4)
-        if CURRENT_NUM.rect.colliderect(NUM1_BUTTON.rect):
-            print("Fusion -> New rect")
-
-            
-
+        if CURRENT_NUM in other_nums:
+            other_nums.remove(CURRENT_NUM)
+        for other_num in other_nums:
+            if CURRENT_NUM.rect.colliderect(other_num.rect):
+                num_group.remove(other_num)
 
 #                                               MAIN LOOP
-while RUNNING:
+def main():
+    global CURRENT_NUM
+    global RECTANGLE_DRAGING
+    while RUNNING:
 
-    
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-        #Handle the drag & drop mechanic for NUM_BUTTONS
-        if CURRENT_NUM:
-            NUM = CURRENT_NUM.rect
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    if NUM.collidepoint(event.pos):
-                        RECTANGLE_DRAGING = True
+        for event in pygame.event.get():
+            #Quit the game
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            #Handle the drag & drop mechanic for NUM_BUTTONS
+            if CURRENT_NUM:
+                NUM = CURRENT_NUM
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if NUM.rect.collidepoint(event.pos):
+                            RECTANGLE_DRAGING = True
+                            mouse_x, mouse_y = event.pos
+                            offset_x = NUM.rect.x - mouse_x
+                            offset_y = NUM.rect.y - mouse_y
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:            
+                        RECTANGLE_DRAGING = False
+
+                elif event.type == pygame.MOUSEMOTION:
+                    if RECTANGLE_DRAGING:
                         mouse_x, mouse_y = event.pos
-                        offset_x = NUM.x - mouse_x
-                        offset_y = NUM.y - mouse_y
+                        if 50 < mouse_x < 900 and 100 < mouse_y < 700: 
+                            NUM.x = mouse_x + offset_x
+                            NUM.y = mouse_y + offset_y
 
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:            
-                    RECTANGLE_DRAGING = False
+        display_BG()
+        screen.blit(TITLE_SURFACE, TITLE_RECT)
+        display_inner_windows()
+        display_nums()
+        display_operands_buttons()
+        screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
 
-            elif event.type == pygame.MOUSEMOTION:
-                if RECTANGLE_DRAGING:
-                    mouse_x, mouse_y = event.pos
-                    if 50 < mouse_x < 900 and 100 < mouse_y < 700: 
-                        NUM.x = mouse_x + offset_x
-                        NUM.y = mouse_y + offset_y
-    
 
-    display_BG()
-    screen.blit(TITLE_SURFACE, TITLE_RECT)
-    display_inner_windows()
-    display_nums()
-    display_operands_buttons()
-    screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
+        pygame.display.update()
+        pygame.display.flip()
+        clock.tick(120)
 
-    pygame.display.flip()
-    clock.tick(120)
+main()
