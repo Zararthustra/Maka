@@ -23,8 +23,9 @@ NUM2 = 2
 NUM3 = 3
 NUM4 = 4
 
-CURRENT_BUTTON = None
+CURRENT_OP = None
 CURRENT_NUM = None
+DELETED_NUM = 0
 RUNNING = True
 RECTANGLE_DRAGING = False
 
@@ -97,7 +98,7 @@ def display_inner_windows():
     pygame.draw.rect(screen, (60, 50, 50), inner4, 0, 0, 0, 20, 20, 20)"""
 
 def display_operands_buttons():
-    global CURRENT_BUTTON
+    global CURRENT_OP
     #Draw button
     ADD_BUTTON.draw(screen)
     SUB_BUTTON.draw(screen)
@@ -105,20 +106,19 @@ def display_operands_buttons():
     DIV_BUTTON.draw(screen)
     #Save clicked button
     if ADD_BUTTON.clicked:
-        CURRENT_BUTTON = ADD_BUTTON
+        CURRENT_OP = ADD_BUTTON
     elif SUB_BUTTON.clicked:
-        CURRENT_BUTTON = SUB_BUTTON
+        CURRENT_OP = SUB_BUTTON
     elif MUL_BUTTON.clicked:
-        CURRENT_BUTTON = MUL_BUTTON
+        CURRENT_OP = MUL_BUTTON
     elif DIV_BUTTON.clicked:
-        CURRENT_BUTTON = DIV_BUTTON
+        CURRENT_OP = DIV_BUTTON
     #Highlighting
-    if CURRENT_BUTTON:
-        pygame.draw.rect(screen, (120, 0, 155), CURRENT_BUTTON.rect, 4)
+    if CURRENT_OP:
+        pygame.draw.rect(screen, (120, 0, 155), CURRENT_OP.rect, 4)
 
 def display_nums():
     global CURRENT_NUM
-    other_nums = [num1, num2, num3, num4]
     #Draw updated nums
     num_group.all_nums.update()
     num_group.draw(screen)
@@ -128,12 +128,35 @@ def display_nums():
         if num.get_clicked(screen):
             CURRENT_NUM = num
 
-    if CURRENT_NUM:
-        if CURRENT_NUM in other_nums:
-            other_nums.remove(CURRENT_NUM)
+def collide_nums():
+    global CURRENT_NUM
+    global DELETED_NUM
+    other_nums = [num1, num2, num3, num4]
+
+    if not CURRENT_NUM:
+        return
+    if CURRENT_NUM in other_nums:
+        other_nums.remove(CURRENT_NUM)
+    if CURRENT_OP:
         for other_num in other_nums:
             if CURRENT_NUM.rect.colliderect(other_num.rect):
-                num_group.remove(other_num)
+                if CURRENT_OP == ADD_BUTTON:
+                    CURRENT_NUM.num += other_num.num
+                    other_num.num = 0
+                if CURRENT_OP == SUB_BUTTON:
+                    CURRENT_NUM.num -= other_num.num
+                    other_num.num = 0
+                if CURRENT_OP == MUL_BUTTON:
+                    CURRENT_NUM.num *= other_num.num
+                    other_num.num = 1
+                if CURRENT_OP == DIV_BUTTON:
+                    CURRENT_NUM.num /= other_num.num
+                    other_num.num = 1
+                other_num.kill()
+                if CURRENT_NUM.reset():
+                    sleep(1)
+                RECTANGLE_DRAGING = False
+                return True
 
 #                                               MAIN LOOP
 def main():
@@ -164,7 +187,7 @@ def main():
                 elif event.type == pygame.MOUSEMOTION:
                     if RECTANGLE_DRAGING:
                         mouse_x, mouse_y = event.pos
-                        if 50 < mouse_x < 900 and 100 < mouse_y < 700: 
+                        if 50 < mouse_x < 900 and 100 < mouse_y < 700:
                             NUM.x = mouse_x + offset_x
                             NUM.y = mouse_y + offset_y
 
@@ -172,6 +195,7 @@ def main():
         screen.blit(TITLE_SURFACE, TITLE_RECT)
         display_inner_windows()
         display_nums()
+        collide_nums()
         display_operands_buttons()
         screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
 

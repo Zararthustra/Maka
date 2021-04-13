@@ -49,6 +49,8 @@ class FontButton(pygame.sprite.Sprite):
         self.num = num
         self.x = x
         self.y = y
+        self.xreset = x
+        self.yreset = y
         self.clicked = False
 
     def get_clicked(self, screen):
@@ -76,3 +78,8 @@ class FontButton(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(font_surface, (int(width), int(height)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
+
+    def reset(self):
+        self.x = self.xreset
+        self.y = self.yreset
+        return True
