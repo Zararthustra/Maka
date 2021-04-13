@@ -17,7 +17,8 @@ screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
 pygame.display.set_caption('Maka')
 
     # Game
-GOAL = 19
+GAME = "running"
+GOAL = 24
 NUM1 = 1
 NUM2 = 2
 NUM3 = 3
@@ -25,9 +26,7 @@ NUM4 = 4
 
 CURRENT_OP = None
 CURRENT_NUM = None
-DELETED_NUM = 0
 RUNNING = True
-RECTANGLE_DRAGING = False
 
 clock = pygame.time.Clock()
 BG_X = 0
@@ -51,13 +50,16 @@ TITLE_RECT = TITLE_SURFACE.get_rect(center = (475, 50))
 #Goal
 GOAL_FONT_SURFACE = GAME_FONT.render(str(GOAL), False, (255, 255, 255))
 GOAL_FONT_RECT = GOAL_FONT_SURFACE.get_rect(center = (1050, 800))
+#Game won
+WON_FONT_SURFACE = GAME_FONT.render("GG", False, (255, 255, 255))
+WON_FONT_RECT = GOAL_FONT_SURFACE.get_rect(center = (600, 450))
 
     # Buttons
 #Operands
-ADD_BUTTON = buttons.ImageButton(990, 125, ADD_IMAGE, 0.4)
-SUB_BUTTON = buttons.ImageButton(990, 275, SUB_IMAGE, 0.4)
-MUL_BUTTON = buttons.ImageButton(990, 425, MUL_IMAGE, 0.4)
-DIV_BUTTON = buttons.ImageButton(990, 575, DIV_IMAGE, 0.4)
+ADD_BUTTON = buttons.OpButton(990, 125, ADD_IMAGE, 0.4)
+SUB_BUTTON = buttons.OpButton(990, 275, SUB_IMAGE, 0.4)
+MUL_BUTTON = buttons.OpButton(990, 425, MUL_IMAGE, 0.4)
+DIV_BUTTON = buttons.OpButton(990, 575, DIV_IMAGE, 0.4)
 #Nums
 num_group = Manager()
 num1 = num_group.create_num_button(200, 200, NUM1)
@@ -65,10 +67,10 @@ num2 = num_group.create_num_button(650, 200, NUM2)
 num3 = num_group.create_num_button(200, 500, NUM3)
 num4 = num_group.create_num_button(650, 500, NUM4)
 
-#                                               DISPLAY FUNCS
+#                                               FUNCS
 def display_BG():
+    """Display endless moving background"""
     global BG_X
-    #Endless moving BG
     screen.blit(BG_IMAGE1, (BG_X, 0))
     screen.blit(BG_IMAGE2, (BG_X + 2000, 0))
     screen.blit(BG_IMAGE1, (BG_X + 4000, 0))
@@ -77,47 +79,36 @@ def display_BG():
         BG_X = 0
 
 def display_inner_windows():
-    #Blocks window
+    """Display inner grey windows"""
+    #Nums window
     inner1 = pygame.Surface((850, 600)).fill((0, 0, 0))
     inner1.x = 50
     inner1.y = 100
     pygame.draw.rect(screen, (60, 50, 50), inner1, 0, 0, 20, 20, 20, 0)
-    #Operands window
-    """inner2 = pygame.Surface((200, 600)).fill((0, 0, 0))
-    inner2.x = 950
-    inner2.y = 100
-    pygame.draw.rect(screen, (60, 50, 50), inner2, 0, 0, 20, 20, 0, 20)"""
     #Result window
     inner3 = pygame.Surface((850, 100)).fill((0, 0, 0))
     inner3.x = 50
     inner3.y = 750
     pygame.draw.rect(screen, (60, 50, 50), inner3, 0, 0, 20, 0, 20, 20)
-    #Goal window
-    """inner4 = pygame.Surface((200, 100)).fill((0, 0, 0))
-    inner4.topleft = (950, 750)
-    pygame.draw.rect(screen, (60, 50, 50), inner4, 0, 0, 0, 20, 20, 20)"""
 
 def display_operands_buttons():
+    """Display and save the current operand button""" 
     global CURRENT_OP
-    #Draw button
-    ADD_BUTTON.draw(screen)
-    SUB_BUTTON.draw(screen)
-    MUL_BUTTON.draw(screen)
-    DIV_BUTTON.draw(screen)
-    #Save clicked button
-    if ADD_BUTTON.clicked:
+    #Draw and save clicked button
+    if ADD_BUTTON.draw_check_click(screen):
         CURRENT_OP = ADD_BUTTON
-    elif SUB_BUTTON.clicked:
+    elif SUB_BUTTON.draw_check_click(screen):
         CURRENT_OP = SUB_BUTTON
-    elif MUL_BUTTON.clicked:
+    elif MUL_BUTTON.draw_check_click(screen):
         CURRENT_OP = MUL_BUTTON
-    elif DIV_BUTTON.clicked:
+    elif DIV_BUTTON.draw_check_click(screen):
         CURRENT_OP = DIV_BUTTON
     #Highlighting
     if CURRENT_OP:
         pygame.draw.rect(screen, (120, 0, 155), CURRENT_OP.rect, 4)
 
 def display_nums():
+    """Display and update nums, and save the current number"""
     global CURRENT_NUM
     #Draw updated nums
     num_group.all_nums.update()
@@ -125,12 +116,12 @@ def display_nums():
     #Save the clicked button to CURRENT_NUM
     nums = num_group.all_nums
     for num in nums:
-        if num.get_clicked(screen):
+        if num.get_clicked():
             CURRENT_NUM = num
 
 def collide_nums():
+    """Check collision and compute solution"""
     global CURRENT_NUM
-    global DELETED_NUM
     other_nums = [num1, num2, num3, num4]
 
     if not CURRENT_NUM:
@@ -142,28 +133,37 @@ def collide_nums():
             if CURRENT_NUM.rect.colliderect(other_num.rect):
                 if CURRENT_OP == ADD_BUTTON:
                     CURRENT_NUM.num += other_num.num
-                    other_num.num = 0
-                if CURRENT_OP == SUB_BUTTON:
+                    # Throwing the rect far away from screen because :
+                    # persistent "rect ghost" after remove sprite,
+                    # which was colliding with nums
+                    other_num.rect.x = -2500
+                elif CURRENT_OP == SUB_BUTTON:
                     CURRENT_NUM.num -= other_num.num
-                    other_num.num = 0
-                if CURRENT_OP == MUL_BUTTON:
+                    other_num.rect.x = -2500
+                elif CURRENT_OP == MUL_BUTTON:
                     CURRENT_NUM.num *= other_num.num
-                    other_num.num = 1
-                if CURRENT_OP == DIV_BUTTON:
-                    CURRENT_NUM.num /= other_num.num
-                    other_num.num = 1
+                    other_num.rect.x = -2500
+                elif CURRENT_OP == DIV_BUTTON:
+                    CURRENT_NUM.num //= other_num.num
+                    other_num.rect.x = -2500
                 other_num.kill()
-                if CURRENT_NUM.reset():
-                    sleep(1)
-                RECTANGLE_DRAGING = False
                 return True
+
+def game_state(game_status):
+    """Return game state"""
+    if CURRENT_NUM and CURRENT_NUM.num == GOAL:
+        return "won"
+    else:
+        return "running"
 
 #                                               MAIN LOOP
 def main():
     global CURRENT_NUM
-    global RECTANGLE_DRAGING
-    while RUNNING:
+    rectangle_dragging = False
+    game = "running"
 
+    while RUNNING:
+        #Event loop
         for event in pygame.event.get():
             #Quit the game
             if event.type == pygame.QUIT:
@@ -175,32 +175,39 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if NUM.rect.collidepoint(event.pos):
-                            RECTANGLE_DRAGING = True
+                            rectangle_dragging = True
                             mouse_x, mouse_y = event.pos
                             offset_x = NUM.rect.x - mouse_x
                             offset_y = NUM.rect.y - mouse_y
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:            
-                        RECTANGLE_DRAGING = False
+                        rectangle_dragging = False
+                        CURRENT_NUM.reset()
+
 
                 elif event.type == pygame.MOUSEMOTION:
-                    if RECTANGLE_DRAGING:
+                    if rectangle_dragging:
                         mouse_x, mouse_y = event.pos
                         if 50 < mouse_x < 900 and 100 < mouse_y < 700:
                             NUM.x = mouse_x + offset_x
                             NUM.y = mouse_y + offset_y
 
-        display_BG()
-        screen.blit(TITLE_SURFACE, TITLE_RECT)
-        display_inner_windows()
-        display_nums()
-        collide_nums()
-        display_operands_buttons()
-        screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
+        if game == "running":
+            display_BG()
+            screen.blit(TITLE_SURFACE, TITLE_RECT)
+            display_inner_windows()
+            display_nums()
+            display_operands_buttons()
+            screen.blit(GOAL_FONT_SURFACE, GOAL_FONT_RECT)
+            if collide_nums():
+                game = game_state(game)
+        elif game == "won":
+            display_BG()
+            screen.blit(WON_FONT_SURFACE, WON_FONT_RECT)
+        elif game == "over":
+            pass
 
-
-        pygame.display.update()
         pygame.display.flip()
         clock.tick(120)
 

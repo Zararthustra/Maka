@@ -2,17 +2,16 @@
 Button class
 """
 import pygame
-
 pygame.init()
 
-class ImageButton():
+
+class OpButton():
     """
     Define button class for an image
     """
 
     def __init__(self, x, y, image_surface, scale):
         """constructor"""
-
         width = image_surface.get_width()
         height = image_surface.get_height()
         self.image = pygame.transform.scale(image_surface, (int(width * scale), int(height * scale)))
@@ -20,9 +19,8 @@ class ImageButton():
         self.rect.topleft = (x, y)
         self.clicked = False
 
-    def draw(self, surface):
+    def draw_check_click(self, surface):
         """draw button and handle if clicked or not"""
-
         action = False
         pos = pygame.mouse.get_pos()
 
@@ -38,12 +36,13 @@ class ImageButton():
         return action
 
 
-class FontButton(pygame.sprite.Sprite):
+class NumButton(pygame.sprite.Sprite):
     """
-    Define button class for a font
+    Define button class for nums
     """
+
     def __init__(self, x, y, num):
-        """constructor"""
+        """Constructor"""
         super().__init__()
         
         self.num = num
@@ -53,23 +52,21 @@ class FontButton(pygame.sprite.Sprite):
         self.yreset = y
         self.clicked = False
 
-    def get_clicked(self, screen):
-        #from main import NUM_GROUP
-        """draw button and handle if clicked or not"""
+    def get_clicked(self):
+        """Check if button is clicked or not"""
 
         pos = pygame.mouse.get_pos()
 
-		#check mouseover and clicked conditions
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
-                pygame.draw.rect(screen, (0, 120, 155), self.rect, 4)
                 return self.clicked
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
             return self.clicked
 
     def update(self):
+        """Update surface when the number has changed"""
         load_font = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
         font_surface = load_font.render(str(self.num), False, (255, 0, 0))
         width = font_surface.get_width()
@@ -80,6 +77,6 @@ class FontButton(pygame.sprite.Sprite):
         self.rect.topleft = (self.x, self.y)
 
     def reset(self):
+        """Reset position of current num"""
         self.x = self.xreset
         self.y = self.yreset
-        return True
