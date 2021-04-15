@@ -40,6 +40,8 @@ class NumButton(pygame.sprite.Sprite):
     """
     Define button class for nums
     """
+    
+    load_font = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 120)
 
     def __init__(self, x, y, num):
         """Constructor"""
@@ -67,12 +69,11 @@ class NumButton(pygame.sprite.Sprite):
 
     def update(self):
         """Update surface when the number has changed"""
-        load_font = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 120)
         
         if self.clicked:
-            font_surface = load_font.render(str(self.num), False, (0, 200, 255))
+            font_surface = self.load_font.render(str(self.num), False, (0, 200, 255))
         else:
-            font_surface = load_font.render(str(self.num), False, (70, 0, 255))
+            font_surface = self.load_font.render(str(self.num), False, (70, 0, 255))
 
         width = font_surface.get_width()
         height = font_surface.get_height()

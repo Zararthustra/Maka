@@ -29,18 +29,18 @@ BG_X = 0
 
     # Images
 #Background
-BG_IMAGE1 = pygame.image.load('Maka/assets/BG.JFIF').convert_alpha()
-BG_IMAGE2 = pygame.image.load('Maka/assets/BG.JFIF').convert_alpha()
+BG_IMAGE1 = pygame.image.load("The_good_count/assets/BG.jfif").convert_alpha()
+BG_IMAGE2 = pygame.image.load('The_good_count/assets/BG.JFIF').convert_alpha()
 BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
 #Operands
-ADD_IMAGE = pygame.image.load('Maka/assets/add.png').convert_alpha()
-SUB_IMAGE = pygame.image.load('Maka/assets/sub.png').convert_alpha()
-MUL_IMAGE = pygame.image.load('Maka/assets/mul.png').convert_alpha()
-DIV_IMAGE = pygame.image.load('Maka/assets/div.png').convert_alpha()
+ADD_IMAGE = pygame.image.load('The_good_count/assets/add.png').convert_alpha()
+SUB_IMAGE = pygame.image.load('The_good_count/assets/sub.png').convert_alpha()
+MUL_IMAGE = pygame.image.load('The_good_count/assets/mul.png').convert_alpha()
+DIV_IMAGE = pygame.image.load('The_good_count/assets/div.png').convert_alpha()
 
     # Fonts
-GAME_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 50)
-TITLE_FONT = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 100)
+GAME_FONT = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 50)
+TITLE_FONT = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 100)
 #Levels
 LEVEL1_SURFACE = GAME_FONT.render("Level 1", False, (255, 230, 230))
 LEVEL1_RECT = LEVEL1_SURFACE.get_rect(center = (475, 30))
@@ -129,7 +129,7 @@ def display_remain():
     curr = CURRENT_NUM.num if CURRENT_NUM else 0
     result = "Actual: {}        Goal: {}        Need: {}".format(curr, GOAL, remain)
 
-    font = pygame.font.Font('Maka/assets/MAGNETOB.TTF', 30)
+    font = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 30)
     surface = font.render(str(result), False, (255, 255, 255))
     rect = surface.get_rect(topleft = (150, 560))
     screen.blit(surface, rect)
