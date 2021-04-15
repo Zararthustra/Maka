@@ -5,7 +5,7 @@ import pygame
 from buttons import NumButton
 
 
-class Manager():
+class NumManager():
     """
     Manage NumButton sprites group
     """
@@ -27,3 +27,4 @@ class Manager():
     def remove(self, num):
         """Remove function"""
         self.all_nums.remove(num)
+
