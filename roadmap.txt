@@ -1,9 +1,0 @@
-Foundations
-    init                        OK
-    window inside main window   OK
-    buttons (+-x:)              OK
-    buttons (nums)              OK
-    buttons collision->fusion                 
-
-Calculation
-Levels
