@@ -10,17 +10,19 @@ class OpButton():
     Define button class for an image
     """
 
-    def __init__(self, x, y, image_surface, scale):
+    def __init__(self, x, y, neutral_surface, clicked_surface, scale):
         """constructor"""
-        width = image_surface.get_width()
-        height = image_surface.get_height()
-        self.image = pygame.transform.scale(image_surface, (int(width * scale), int(height * scale)))
+        width = neutral_surface.get_width()
+        height = neutral_surface.get_height()
+        self.image = pygame.transform.scale(neutral_surface, (int(width * scale), int(height * scale)))
+        self.clicked_image = pygame.transform.scale(clicked_surface, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
 
     def draw_check_click(self, surface):
         """draw button and handle if clicked or not"""
+        from main import CURRENT_OP
         action = False
         pos = pygame.mouse.get_pos()
 
@@ -31,7 +33,11 @@ class OpButton():
                 self.clicked = True
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
-        surface.blit(self.image, (self.rect.x, self.rect.y))
+
+        if CURRENT_OP and CURRENT_OP == self:
+            surface.blit(self.clicked_image, (self.rect.x, self.rect.y))
+        else:
+            surface.blit(self.image, (self.rect.x, self.rect.y))
 
         return action
 

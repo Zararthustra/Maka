@@ -1,0 +1,46 @@
+import pygame
+
+SCREEN_W = 1200
+SCREEN_H = 600
+ICON_IMAGE = pygame.image.load('The_good_count/assets/add.png')
+pygame.display.set_icon(ICON_IMAGE)
+screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+
+    #Background
+BG_IMAGE1 = pygame.image.load("The_good_count/assets/BG.jfif").convert_alpha()
+BG_IMAGE2 = pygame.image.load('The_good_count/assets/BG.JFIF').convert_alpha()
+BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
+
+    #Operands
+#Neutral
+ADD_IMAGE = pygame.image.load('The_good_count/assets/add.png').convert_alpha()
+SUB_IMAGE = pygame.image.load('The_good_count/assets/sub.png').convert_alpha()
+MUL_IMAGE = pygame.image.load('The_good_count/assets/mul.png').convert_alpha()
+DIV_IMAGE = pygame.image.load('The_good_count/assets/div.png').convert_alpha()
+
+#Clicked
+ADD_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/add_clicked.png').convert_alpha()
+SUB_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/sub_clicked.png').convert_alpha()
+MUL_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/mul_clicked.png').convert_alpha()
+DIV_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/div_clicked.png').convert_alpha()
+
+    #Tuto
+TUTO_IMAGE1 = pygame.image.load('The_good_count/assets/first_tuto.png').convert_alpha()
+TUTO_RECT1 = TUTO_IMAGE1.get_rect()
+TUTO_RECT1.topleft = (3, 3)
+
+TUTO_IMAGE2 = pygame.image.load('The_good_count/assets/second_tuto.png').convert_alpha()
+TUTO_RECT2 = TUTO_IMAGE2.get_rect()
+TUTO_RECT2.topleft = (3, 3)
+
+TUTO_IMAGE3 = pygame.image.load('The_good_count/assets/third_tuto.png').convert_alpha()
+TUTO_RECT3 = TUTO_IMAGE3.get_rect()
+TUTO_RECT3.topleft = (3, 3)
+
+TUTO_IMAGE4 = pygame.image.load('The_good_count/assets/fourth_tuto.png').convert_alpha()
+TUTO_RECT4 = TUTO_IMAGE4.get_rect()
+TUTO_RECT4.topleft = (3, 3)
+
+TUTO_IMAGE5 = pygame.image.load('The_good_count/assets/fifth_tuto.png').convert_alpha()
+TUTO_RECT5 = TUTO_IMAGE5.get_rect()
+TUTO_RECT5.topleft = (3, 3)
