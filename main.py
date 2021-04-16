@@ -5,9 +5,11 @@ import pygame
 from sys import exit
 import buttons
 from Manager import NumManager
+from fonts import *
 from time import sleep
 
 
+#------------------------------------------------------------------------------------------------------------
 #                                               GLOBAL VARIABLES
 #------------------------------------------------------------------------------------------------------------
     # Screen
@@ -37,34 +39,8 @@ ADD_IMAGE = pygame.image.load('The_good_count/assets/add.png').convert_alpha()
 SUB_IMAGE = pygame.image.load('The_good_count/assets/sub.png').convert_alpha()
 MUL_IMAGE = pygame.image.load('The_good_count/assets/mul.png').convert_alpha()
 DIV_IMAGE = pygame.image.load('The_good_count/assets/div.png').convert_alpha()
-
-    # Fonts
-GAME_FONT = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 50)
-TITLE_FONT = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 100)
-#Levels
-LEVEL1_SURFACE = GAME_FONT.render("Level 1", False, (255, 230, 230))
-LEVEL1_RECT = LEVEL1_SURFACE.get_rect(center = (475, 30))
-
-LEVEL2_SURFACE = GAME_FONT.render("Level 2", False, (255, 230, 230))
-LEVEL2_RECT = LEVEL2_SURFACE.get_rect(center = (475, 30))
-
-LEVEL3_SURFACE = GAME_FONT.render("Level 3", False, (255, 230, 230))
-LEVEL3_RECT = LEVEL3_SURFACE.get_rect(center = (475, 30))
-#Intro
-INTRO_FONT_SURFACE1 = TITLE_FONT.render("The Good Count", False, (255, 255, 255))
-INTRO_FONT_RECT1 = INTRO_FONT_SURFACE1.get_rect(center = (600, 250))
-
-INTRO_FONT_SURFACE2 = GAME_FONT.render("Click to start", False, (255, 255, 255))
-INTRO_FONT_RECT2 = INTRO_FONT_SURFACE2.get_rect(center = (600, 350))
-
-INTRO_FONT_SURFACE3 = GAME_FONT.render("Press space to restart", False, (255, 255, 255))
-INTRO_FONT_RECT3 = INTRO_FONT_SURFACE3.get_rect(center = (600, 450))
-#Game won
-WON_FONT_SURFACE1 = TITLE_FONT.render("Good Count !", False, (255, 255, 255))
-WON_FONT_RECT1 = WON_FONT_SURFACE1.get_rect(center = (600, 250))
-
-WON_FONT_SURFACE2 = GAME_FONT.render("Click for next level", False, (255, 255, 255))
-WON_FONT_RECT2 = WON_FONT_SURFACE2.get_rect(center = (600, 350))
+#Window icon
+pygame.display.set_icon(ADD_IMAGE)
 
     # Buttons
 #Operands
@@ -75,6 +51,8 @@ DIV_BUTTON = buttons.OpButton(1000, 475, DIV_IMAGE, 0.4)
 #Num sprite group
 num_group = NumManager()
 
+
+#------------------------------------------------------------------------------------------------------------
 #                                               FUNCS
 #------------------------------------------------------------------------------------------------------------
 
@@ -125,13 +103,12 @@ def display_nums():
 
 def display_remain():
     """Display number remaining to reach goal, during calculation"""
-    remain = GOAL - CURRENT_NUM.num if CURRENT_NUM else GOAL
     curr = CURRENT_NUM.num if CURRENT_NUM else 0
-    result = "Actual: {}        Goal: {}        Need: {}".format(curr, GOAL, remain)
+    result = "Actual: {}                                                          Goal: {}".format(curr, GOAL)
 
-    font = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 30)
+    font = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 30)
     surface = font.render(str(result), False, (255, 255, 255))
-    rect = surface.get_rect(topleft = (150, 560))
+    rect = surface.get_rect(topleft = (100, 560))
     screen.blit(surface, rect)
 
 def collide_nums():
@@ -169,12 +146,14 @@ def collide_nums():
 def reset_nums(number1, number2, number3, number4, goal):
     global GOAL
     num1 = num_group.create_num_button(160, 110, number1)
-    num2 = num_group.create_num_button(700, 110, number2)
+    num2 = num_group.create_num_button(650, 110, number2)
     num3 = num_group.create_num_button(160, 375, number3)
-    num4 = num_group.create_num_button(700, 375, number4)
+    num4 = num_group.create_num_button(650, 375, number4)
     GOAL = goal
 
-#                                               STAGE MANAGER CLASS
+
+#------------------------------------------------------------------------------------------------------------
+#                                         STAGE MANAGER CLASS
 #------------------------------------------------------------------------------------------------------------
 class StageManager():
     """
@@ -191,6 +170,9 @@ class StageManager():
         #Intro
         if self.state == "intro":
             self.intro()
+        #Flash Tuto
+        elif self.state == "tuto":
+            self.tuto()
         #Levels
         elif self.state == "level1switch":
             reset_nums(6, 2, 10, 7, 31)
@@ -205,31 +187,101 @@ class StageManager():
             self.main()
             screen.blit(LEVEL2_SURFACE, LEVEL2_RECT)
         elif self.state == "level3switch":
-            reset_nums(13, 3, 4, 26, 27)
+            reset_nums(13, 3, 4, 3, 27)
             self.state = "level3"
         elif self.state == "level3":
             self.main()
             screen.blit(LEVEL3_SURFACE, LEVEL3_RECT)
-        #Game over
+        elif self.state == "level4switch":
+            reset_nums(7, 20, 7, 2, 35)
+            self.state = "level4"
+        elif self.state == "level4":
+            self.main()
+            screen.blit(LEVEL4_SURFACE, LEVEL4_RECT)
+        elif self.state == "level5switch":
+            reset_nums(17, 9, 12, 2, 57)
+            self.state = "level5"
+        elif self.state == "level5":
+            self.main()
+            screen.blit(LEVEL5_SURFACE, LEVEL5_RECT)
+        elif self.state == "level6switch":
+            reset_nums(3, 90, 12, 3, 120)
+            self.state = "level6"
+        elif self.state == "level6":
+            self.main()
+            screen.blit(LEVEL6_SURFACE, LEVEL6_RECT)
+        elif self.state == "level7switch":
+            reset_nums(3, 6, 9, 5, 99)
+            self.state = "level7"
+        elif self.state == "level7":
+            self.main()
+            screen.blit(LEVEL7_SURFACE, LEVEL7_RECT)
+        elif self.state == "level8switch":
+            reset_nums(3, 2, 15, 26, 32)
+            self.state = "level8"
+        elif self.state == "level8":
+            self.main()
+            screen.blit(LEVEL8_SURFACE, LEVEL8_RECT)
+        elif self.state == "level9switch":
+            reset_nums(44, 6, 15, 2, 19)
+            self.state = "level9"
+        elif self.state == "level9":
+            self.main()
+            screen.blit(LEVEL9_SURFACE, LEVEL9_RECT)
+        elif self.state == "level10switch":
+            reset_nums(40, 7, 27, 2, 1)
+            self.state = "level10"
+        elif self.state == "level10":
+            self.main()
+            screen.blit(LEVEL10_SURFACE, LEVEL10_RECT)
+        #Stage over
         elif self.state == "won":
             self.won()
+        #Game over
+        elif self.state == "over":
+            self.over()
 
     def intro(self):
         """Intro stage"""
+        display_BG()
+        screen.blit(INTRO_FONT_SURFACE1, INTRO_FONT_RECT1)
+        screen.blit(INTRO_FONT_SURFACE2, INTRO_FONT_RECT2)
+        screen.blit(INTRO_FONT_SURFACE3, INTRO_FONT_RECT3)
+
+        pos = pygame.mouse.get_pos()
         #Event loop
         for event in pygame.event.get():
             #Quit the game
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            #Click to start
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            #Left click to start
+
+        if INTRO_FONT_RECT2.collidepoint(pos):
+            #Mouseover
+            INTRO_FONT_SURFACE2B = GAME_FONT.render("Start game", False, (200, 200, 200))
+            screen.blit(INTRO_FONT_SURFACE2B, INTRO_FONT_RECT2)
+            if pygame.mouse.get_pressed()[0] == 1:
                 self.state = "level{}switch".format(self.level)
 
+        if INTRO_FONT_RECT3.collidepoint(pos):
+            #Mouseover
+            INTRO_FONT_SURFACE3B = GAME_FONT.render("Quick tutorial", False, (200, 200, 200))
+            screen.blit(INTRO_FONT_SURFACE3B, INTRO_FONT_RECT3)
+            if pygame.mouse.get_pressed()[0] == 1:
+                self.state = "tuto"
+
+
+    def tuto(self):
+        """Flash tutorial to teach commands"""
+        #Event loop
+        for event in pygame.event.get():
+            #Click to start
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.state = "level1switch"
+        
         display_BG()
-        screen.blit(INTRO_FONT_SURFACE1, INTRO_FONT_RECT1)
-        screen.blit(INTRO_FONT_SURFACE2, INTRO_FONT_RECT2)
-        screen.blit(INTRO_FONT_SURFACE3, INTRO_FONT_RECT3)
+
 
     def main(self):
         """Main stage"""
@@ -239,9 +291,12 @@ class StageManager():
         display_nums()
         display_operands_buttons()
         collide_nums()
-        #Switch to "won" state
+        #Switch to "won" or "over" state
         if CURRENT_NUM and CURRENT_NUM.num == GOAL:
-            self.state = "won"
+            if self.level == 10:
+                self.state = "over"
+            else:
+                self.state = "won"
 
     def won(self):
         """Clear sprite group and current num then switch to next level"""
@@ -264,6 +319,29 @@ class StageManager():
         screen.blit(WON_FONT_SURFACE1, WON_FONT_RECT1)
         screen.blit(WON_FONT_SURFACE2, WON_FONT_RECT2)
 
+    def over(self):
+        """Game over"""
+        global CURRENT_NUM
+
+        num_group.all_nums.empty()
+        CURRENT_NUM = None
+        for event in pygame.event.get():
+            #Quit the game
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            #Click to restart game
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.level = 1
+                self.state = "level{}switch".format(self.level)
+
+        display_BG()
+        screen.blit(OVER_FONT_SURFACE1, OVER_FONT_RECT1)
+        screen.blit(OVER_FONT_SURFACE2, OVER_FONT_RECT2)
+        screen.blit(OVER_FONT_SURFACE3, OVER_FONT_RECT3)
+
+
+#------------------------------------------------------------------------------------------------------------
 #                                               MAIN LOOP
 #------------------------------------------------------------------------------------------------------------
 def main():
@@ -302,7 +380,8 @@ def main():
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:            
                         rectangle_dragging = False
-                        NUM.reset()
+                        #Reset position of num after drag
+                        #NUM.reset()
 
                 if event.type == pygame.MOUSEMOTION:
                     if rectangle_dragging:

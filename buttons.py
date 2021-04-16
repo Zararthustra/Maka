@@ -68,12 +68,16 @@ class NumButton(pygame.sprite.Sprite):
             return self.clicked
 
     def update(self):
+        from main import CURRENT_NUM
         """Update surface when the number has changed"""
         
         if self.clicked:
-            font_surface = self.load_font.render(str(self.num), False, (0, 200, 255))
+            font_surface = self.load_font.render(str(self.num), False, (0, 255, 255))
+        elif CURRENT_NUM and CURRENT_NUM == self:
+            font_surface = self.load_font.render(str(self.num), False, (0, 0, 255))
         else:
-            font_surface = self.load_font.render(str(self.num), False, (70, 0, 255))
+            font_surface = self.load_font.render(str(self.num), False, (0, 150, 255))
+
 
         width = font_surface.get_width()
         height = font_surface.get_height()
