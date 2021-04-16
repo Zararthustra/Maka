@@ -7,7 +7,7 @@ GAME_FONT = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 50)
 
 # Levels
 
-LEVEL1_SURFACE = LEVEL_FONT.render("Level 1", False, (255, 230, 230))
+LEVEL1_SURFACE = LEVEL_FONT.render("Stage 1", False, (255, 230, 230))
 LEVEL1_RECT = LEVEL1_SURFACE.get_rect(center = (475, 30))
 
 LEVEL2_SURFACE = LEVEL_FONT.render("Level 2", False, (255, 230, 230))
@@ -67,5 +67,5 @@ OVER_FONT_RECT1 = OVER_FONT_SURFACE1.get_rect(center = (600, 150))
 OVER_FONT_SURFACE2 = TITLE_FONT.render("You win !!!", False, (255, 255, 255))
 OVER_FONT_RECT2 = OVER_FONT_SURFACE2.get_rect(center = (600, 250))
 
-OVER_FONT_SURFACE3 = GAME_FONT.render("Click to restart the game", False, (100, 100, 100))
+OVER_FONT_SURFACE3 = GAME_FONT.render("Click to see details", False, (100, 100, 100))
 OVER_FONT_RECT3 = OVER_FONT_SURFACE3.get_rect(center = (600, 550))

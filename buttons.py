@@ -80,9 +80,11 @@ class NumButton(pygame.sprite.Sprite):
         if self.clicked:
             font_surface = self.load_font.render(str(self.num), False, (0, 255, 255))
         elif CURRENT_NUM and CURRENT_NUM == self:
-            font_surface = self.load_font.render(str(self.num), False, (0, 0, 255))
+            #font_surface = self.load_font.render(str(self.num), False, (0, 0, 255))
+            font_surface = self.load_font.render(str(self.num), False, (50, 50, 50))
         else:
-            font_surface = self.load_font.render(str(self.num), False, (0, 150, 255))
+            #font_surface = self.load_font.render(str(self.num), False, (0, 150, 255))
+            font_surface = self.load_font.render(str(self.num), False, (255, 255, 255))
 
 
         width = font_surface.get_width()

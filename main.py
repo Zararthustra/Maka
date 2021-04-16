@@ -54,16 +54,11 @@ def display_BG():
     if BG_X <= - 2000:
         BG_X = 0
 
-def display_inner_window():
-    """Display the inner grey window"""
-    inner1 = pygame.Surface((850, 500)).fill((0, 0, 0))
-    inner1.x = 50
-    inner1.y = 50
-    pygame.draw.rect(screen, (60, 50, 50), inner1, 0, 0, 20, 20, 20, 20)
-
 def display_operands_buttons():
     """Display and save the current operand button""" 
     global CURRENT_OP
+
+    pygame.draw.line(screen, (0, 0, 0), (900, 50), (900, 550))
     #Draw and save clicked button
     if ADD_BUTTON.draw_check_click(screen):
         CURRENT_OP = ADD_BUTTON
@@ -86,17 +81,9 @@ def display_nums():
         if num.get_clicked():
             CURRENT_NUM = num
 
-def display_remain():
-    """Display number remaining to reach goal, during calculation"""
-    curr = CURRENT_NUM.num if CURRENT_NUM else 0
-    result = "Actual: {}                                                          Goal: {}".format(curr, GOAL)
 
-    font = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 30)
-    surface = font.render(str(result), False, (255, 255, 255))
-    rect = surface.get_rect(topleft = (100, 560))
-    screen.blit(surface, rect)
 
-def collide_nums():
+def collide_nums(goal):
     """Check collision and compute solution"""
     global CURRENT_NUM
     global CURRENT_OP
@@ -125,28 +112,21 @@ def collide_nums():
                     CURRENT_NUM.num //= other_num.num
                     other_num.rect.x = 9999
                 other_num.kill()
-    if CURRENT_NUM.num == GOAL:
+    if CURRENT_NUM.num == goal:
         CURRENT_OP = None
         return True
 
-def reset_nums(number1, number2, number3, number4, goal):
-    global GOAL
-    num1 = num_group.create_num_button(160, 110, number1)
-    num2 = num_group.create_num_button(650, 110, number2)
-    num3 = num_group.create_num_button(160, 375, number3)
-    num4 = num_group.create_num_button(650, 375, number4)
-    GOAL = goal
 
-def display_clock(state):
+
+def display_clock(state, goal):
     """Display timer"""
     global START_TIME
     global STAGE_TIME
 
+    time_init = pygame.time.get_ticks()
+    
     if state == "intro" or state == "tuto":
         return
-    font = pygame.font.Font(None, 30)
-    font_color = pygame.Color('springgreen')
-    time_init = pygame.time.get_ticks()
     
     #Save tick in variable to set stage timer
     if re.match(r'level\dswitch', state):
@@ -154,12 +134,8 @@ def display_clock(state):
 
     #Clean stage time from milisecs to secs
     stage_timer = int((time_init - START_TIME) / 1000)
-
-    text = font.render("Timer: " + str(stage_timer), True, (0, 0, 0))
-    if re.match(r'level\d', state):
-        screen.blit(text, (10, 10))
     
-    if collide_nums() == True:
+    if collide_nums(goal) == True:
         STAGE_TIME = stage_timer
 
 #------------------------------------------------------------------------------------------------------------
@@ -176,6 +152,8 @@ class StageManager():
         self.level = 1
         self.tuto_page = 1
         self.score = 0
+        self.score_list = []
+        self.goal = 0
 
     def state_manager(self):
         """Switch game stage"""
@@ -187,91 +165,91 @@ class StageManager():
             self.tuto()
         #Levels
         elif self.state == "level1switch":
-            reset_nums(6, 2, 10, 7, 31)
+            self.reset_nums(6, 2, 10, 7, 31)
             self.state = "level1"
         elif self.state == "reset1":
-            reset_nums(6, 2, 10, 7, 31)
+            self.reset_nums(6, 2, 10, 7, 31)
             self.state = "level1"
         elif self.state == "level1":
             self.main()
             screen.blit(LEVEL1_SURFACE, LEVEL1_RECT)
         elif self.state == "level2switch":
-            reset_nums(12, 8, 3, 1, 33)
+            self.reset_nums(12, 8, 3, 1, 33)
             self.state = "level2"
         elif self.state == "reset2":
-            reset_nums(12, 8, 3, 1, 33)
+            self.reset_nums(12, 8, 3, 1, 33)
             self.state = "level2"
         elif self.state == "level2":
             self.main()
             screen.blit(LEVEL2_SURFACE, LEVEL2_RECT)
         elif self.state == "level3switch":
-            reset_nums(13, 3, 4, 3, 27)
+            self.reset_nums(13, 3, 4, 3, 27)
             self.state = "level3"
         elif self.state == "reset3":
-            reset_nums(13, 3, 4, 3, 27)
+            self.reset_nums(13, 3, 4, 3, 27)
             self.state = "level3"
         elif self.state == "level3":
             self.main()
             screen.blit(LEVEL3_SURFACE, LEVEL3_RECT)
         elif self.state == "level4switch":
-            reset_nums(7, 20, 7, 2, 35)
+            self.reset_nums(7, 20, 7, 2, 35)
             self.state = "level4"
         elif self.state == "reset4":
-            reset_nums(7, 20, 7, 2, 35)
+            self.reset_nums(7, 20, 7, 2, 35)
             self.state = "level4"
         elif self.state == "level4":
             self.main()
             screen.blit(LEVEL4_SURFACE, LEVEL4_RECT)
         elif self.state == "level5switch":
-            reset_nums(17, 9, 12, 2, 57)
+            self.reset_nums(17, 9, 12, 2, 57)
             self.state = "level5"
         elif self.state == "reset5":
-            reset_nums(17, 9, 12, 2, 57)
+            self.reset_nums(17, 9, 12, 2, 57)#hard
             self.state = "level5"
         elif self.state == "level5":
             self.main()
             screen.blit(LEVEL5_SURFACE, LEVEL5_RECT)
         elif self.state == "level6switch":
-            reset_nums(3, 90, 12, 3, 120)
+            self.reset_nums(3, 90, 12, 3, 120)
             self.state = "level6"
         elif self.state == "reset6":
-            reset_nums(3, 90, 12, 3, 120)
+            self.reset_nums(3, 90, 12, 3, 120)
             self.state = "level6"
         elif self.state == "level6":
             self.main()
             screen.blit(LEVEL6_SURFACE, LEVEL6_RECT)
         elif self.state == "level7switch":
-            reset_nums(3, 6, 9, 5, 99)
+            self.reset_nums(3, 6, 9, 5, 99)
             self.state = "level7"
         elif self.state == "reset7":
-            reset_nums(3, 6, 9, 5, 99)
+            self.reset_nums(3, 6, 9, 5, 99)
             self.state = "level7"
         elif self.state == "level7":
             self.main()
             screen.blit(LEVEL7_SURFACE, LEVEL7_RECT)
         elif self.state == "level8switch":
-            reset_nums(3, 2, 15, 26, 32)
+            self.reset_nums(3, 2, 15, 26, 32)
             self.state = "level8"
         elif self.state == "reset8":
-            reset_nums(3, 2, 15, 26, 32)
+            self.reset_nums(3, 2, 15, 26, 32)
             self.state = "level8"
         elif self.state == "level8":
             self.main()
             screen.blit(LEVEL8_SURFACE, LEVEL8_RECT)
         elif self.state == "level9switch":
-            reset_nums(44, 6, 15, 2, 19)
+            self.reset_nums(44, 6, 15, 2, 19)
             self.state = "level9"
         elif self.state == "reset9":
-            reset_nums(44, 6, 15, 2, 19)
+            self.reset_nums(44, 6, 15, 2, 19)#easy
             self.state = "level9"
         elif self.state == "level9":
             self.main()
             screen.blit(LEVEL9_SURFACE, LEVEL9_RECT)
         elif self.state == "level10switch":
-            reset_nums(40, 7, 27, 2, 1)
+            self.reset_nums(40, 7, 27, 2, 1)
             self.state = "level10"
         elif self.state == "reset10":
-            reset_nums(40, 7, 27, 2, 1)
+            self.reset_nums(40, 7, 27, 2, 1)
             self.state = "level10"
         elif self.state == "level10":
             self.main()
@@ -282,6 +260,8 @@ class StageManager():
         #Game over
         elif self.state == "over":
             self.over()
+        elif self.state == "scores":
+            self.scores()
 
     def intro(self):
         """Intro stage"""
@@ -344,13 +324,12 @@ class StageManager():
     def main(self):
         """Main stage"""
         display_BG()
-        display_inner_window()
-        display_remain()
+        self.display_remain()
         display_nums()
         display_operands_buttons()
-        collide_nums()
+        collide_nums(self.goal)
         #Switch to "won" or "over" state
-        if CURRENT_NUM and CURRENT_NUM.num == GOAL:
+        if CURRENT_NUM and CURRENT_NUM.num == self.goal:
             if self.level == 10:
                 self.state = "over"
             else:
@@ -364,10 +343,12 @@ class StageManager():
         CURRENT_NUM = None
 
         time = STAGE_TIME
-        minutes, seconds = self.convert_to_minute()
+        minutes, seconds = self.convert_to_minute(self.score + time)
 
         stage_time = GAME_FONT.render("Level completed in {} seconds".format(time), False, (255, 255, 255))
-        current_score = GAME_FONT.render("Your actual score is {}min {}secs ({}secs)".format(minutes, seconds, self.score + time), False, (255, 255, 255))
+        current_score = GAME_FONT.render("Your actual score is {}min {}secs".format(minutes, seconds), False, (255, 255, 255))
+        stage_time_rect = stage_time.get_rect(center = (600, 350))
+        current_score_rect = current_score.get_rect(center = (600, 400))
 
         for event in pygame.event.get():
             #Quit the game
@@ -377,23 +358,43 @@ class StageManager():
             #Click to switch level
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.score += time
+                self.score_list.append(time)
+                print(self.score_list)
                 self.level += 1
                 self.state = "level{}switch".format(self.level)
 
         display_BG()
         screen.blit(WON_FONT_SURFACE1, WON_FONT_RECT1)
-        screen.blit(stage_time, (350, 350))
-        screen.blit(current_score, (150, 400))
+        screen.blit(stage_time, stage_time_rect)
+        screen.blit(current_score, current_score_rect)
         screen.blit(WON_FONT_SURFACE2, WON_FONT_RECT2)
 
-    def convert_to_minute(self):
+    def convert_to_minute(self, seconds):
         """Convert seconds score to min"""
-        seconds = self.score
         seconds %= 3600
         minutes = seconds // 60
         seconds %= 60
 
         return minutes, seconds
+
+    def display_remain(self):
+        """Display number remaining to reach goal, during calculation"""
+        curr = CURRENT_NUM.num if CURRENT_NUM else 0
+        rest = self.goal - curr
+        result = "Goal: {}                      Rest: {}                        Actual: {}".format(self.goal, rest, curr)
+
+        font = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 30)
+        surface = font.render(str(result), False, (255, 255, 255))
+        rect = surface.get_rect(center = (450, 20))
+        screen.blit(surface, rect)
+
+    def reset_nums(self, number1, number2, number3, number4, goal):
+
+        num1 = num_group.create_num_button(160, 110, number1)
+        num2 = num_group.create_num_button(650, 110, number2)
+        num3 = num_group.create_num_button(160, 375, number3)
+        num4 = num_group.create_num_button(650, 375, number4)
+        self.goal = goal
 
     def over(self):
         """Game over"""
@@ -401,9 +402,27 @@ class StageManager():
 
         num_group.all_nums.empty()
         CURRENT_NUM = None
-        minutes, seconds = self.convert_to_minute()
+        minutes, seconds = self.convert_to_minute(self.score)
         total_score = GAME_FONT.render("Your total score is {}min {}secs ({}secs)".format(minutes, seconds, self.score), False, (255, 255, 255))
+        total_score_rect = total_score.get_rect(center = (600, 400))
 
+        for event in pygame.event.get():
+            #Quit the game
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            #Click to see details
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.state = "scores"
+
+        display_BG()
+        screen.blit(OVER_FONT_SURFACE1, OVER_FONT_RECT1)
+        screen.blit(OVER_FONT_SURFACE2, OVER_FONT_RECT2)
+        screen.blit(total_score, total_score_rect)
+        screen.blit(OVER_FONT_SURFACE3, OVER_FONT_RECT3)
+
+    def scores(self):
+        """Display score for each level"""
         for event in pygame.event.get():
             #Quit the game
             if event.type == pygame.QUIT:
@@ -415,10 +434,23 @@ class StageManager():
                 self.state = "intro"
 
         display_BG()
-        screen.blit(OVER_FONT_SURFACE1, OVER_FONT_RECT1)
-        screen.blit(OVER_FONT_SURFACE2, OVER_FONT_RECT2)
-        screen.blit(total_score, (150, 400))
-        screen.blit(OVER_FONT_SURFACE3, OVER_FONT_RECT3)
+        
+        i = 1
+        y = 50
+        for score in self.score_list:
+            table_score = GAME_FONT.render("Level{}: {}secs".format(i, score), False, (255, 255, 255))
+            if i % 2 != 0:
+                table_score_rect = table_score.get_rect(topleft = (150, y))
+                screen.blit(table_score, table_score_rect)
+            if i % 2 == 0:
+                table_score_rect = table_score.get_rect(topleft = (700, y))
+                screen.blit(table_score, table_score_rect)
+                y += 100
+                pass
+            i += 1
+        tot = GAME_FONT.render("Total: {}secs".format(self.score), False, (255, 255, 255))
+        tot_rect = tot.get_rect(topleft = (400, 550))
+        screen.blit(tot, tot_rect)
 
 
 #------------------------------------------------------------------------------------------------------------
@@ -471,7 +503,7 @@ def main():
                             NUM.x = mouse_x + offset_x
                             NUM.y = mouse_y + offset_y
 
-        display_clock(game_state.state)
+        display_clock(game_state.state, game_state.goal)
         pygame.display.flip()
         clock.tick(60)
 
