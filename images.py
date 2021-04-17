@@ -11,7 +11,8 @@ BG_IMAGE1 = pygame.image.load("The_good_count/assets/BG.jfif").convert_alpha()
 BG_IMAGE2 = pygame.image.load('The_good_count/assets/BG.JFIF').convert_alpha()
 BG_IMAGE2 = pygame.transform.flip(BG_IMAGE2, True, False)
 
-    #Operands
+
+    #Operators
 #Neutral
 ADD_IMAGE = pygame.image.load('The_good_count/assets/add.png').convert_alpha()
 SUB_IMAGE = pygame.image.load('The_good_count/assets/sub.png').convert_alpha()
@@ -23,6 +24,16 @@ ADD_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/add_clicked.png').c
 SUB_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/sub_clicked.png').convert_alpha()
 MUL_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/mul_clicked.png').convert_alpha()
 DIV_CLICKED_IMAGE = pygame.image.load('The_good_count/assets/div_clicked.png').convert_alpha()
+
+
+    #Replay button
+RESET_SURFACEA = pygame.image.load('The_good_count/assets/resetA.png').convert_alpha()
+RESET_SURFACEA = pygame.transform.scale(RESET_SURFACEA, (int(RESET_SURFACEA.get_width() * 0.25), int(RESET_SURFACEA.get_height() * 0.25)))
+RESET_SURFACEB = pygame.image.load('The_good_count/assets/resetB.png').convert_alpha()
+RESET_SURFACEB = pygame.transform.scale(RESET_SURFACEB, (int(RESET_SURFACEB.get_width() * 0.26), int(RESET_SURFACEB.get_height() * 0.26)))
+RESET_RECTA = RESET_SURFACEA.get_rect(center = (900, 35))
+RESET_RECTB = RESET_SURFACEB.get_rect(center = (900, 35))
+
 
     #Tuto
 TUTO_IMAGE1 = pygame.image.load('The_good_count/assets/first_tuto.png').convert_alpha()

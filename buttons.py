@@ -1,5 +1,5 @@
 """
-Button module for operands and nums
+Button module for operators and nums
 """
 import pygame
 pygame.init()
@@ -56,8 +56,6 @@ class NumButton(pygame.sprite.Sprite):
         self.num = num
         self.x = x
         self.y = y
-        self.xreset = x
-        self.yreset = y
         self.clicked = False
 
     def get_clicked(self):
@@ -78,23 +76,15 @@ class NumButton(pygame.sprite.Sprite):
         """Update surface when the number has changed"""
         
         if self.clicked:
-            font_surface = self.load_font.render(str(self.num), False, (0, 255, 255))
+            font_surface = self.load_font.render(str(self.num), False, (200, 200, 200))
         elif CURRENT_NUM and CURRENT_NUM == self:
-            #font_surface = self.load_font.render(str(self.num), False, (0, 0, 255))
-            font_surface = self.load_font.render(str(self.num), False, (50, 50, 50))
+            font_surface = self.load_font.render(str(self.num), False, (30, 30, 50))
         else:
-            #font_surface = self.load_font.render(str(self.num), False, (0, 150, 255))
-            font_surface = self.load_font.render(str(self.num), False, (255, 255, 255))
+            font_surface = self.load_font.render(str(self.num), False, (100, 100, 100))
 
 
         width = font_surface.get_width()
         height = font_surface.get_height()
 
         self.image = pygame.transform.scale(font_surface, (int(width), int(height)))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (self.x, self.y)
-
-    def reset(self):
-        """Reset position of current num"""
-        self.x = self.xreset
-        self.y = self.yreset
+        self.rect = self.image.get_rect(center = (self.x, self.y))
