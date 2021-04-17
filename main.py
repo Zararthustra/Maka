@@ -151,7 +151,7 @@ class StageManager():
         self.tuto_page = 1
         self.score = 0
         self.score_list = []
-        self.goal = 99
+        self.goal = 0
 
     def display_level(self):
         """Display stage/level in full screen before starting it"""
@@ -242,9 +242,15 @@ class StageManager():
         elif self.state == "level10":
             self.main()
         #Stage over
+        elif self.state == "wonswitch":
+            won_stage.play()
+            self.state = "won"
         elif self.state == "won":
             self.won()
         #Game over
+        elif self.state == "overswitch":
+            pygame.mixer.music.play(-1, 0, 0)
+            self.state = "over"
         elif self.state == "over":
             self.over()
         elif self.state == "scores":
@@ -272,7 +278,7 @@ class StageManager():
             screen.blit(INTRO_FONT_SURFACE2B, INTRO_FONT_RECT2)
             if pygame.mouse.get_pressed()[0] == 1:
                 menu_sound.play()
-                self.state = "level{}switch".format(self.level)
+                self.state = "level1switch"
         if INTRO_FONT_RECT3.collidepoint(pos):
             #Mouseover
             INTRO_FONT_SURFACE3B = GAME_FONT.render("Quick tutorial", False, (200, 200, 200))
@@ -322,9 +328,9 @@ class StageManager():
         #Switch to "won" or "over" state
         if CURRENT_NUM and CURRENT_NUM.num == self.goal:
             if self.level == 10:
-                self.state = "over"
+                self.state = "overswitch"
             else:
-                self.state = "won"        
+                self.state = "wonswitch"        
         self.reset_button()
 
     def won(self):
@@ -415,6 +421,7 @@ class StageManager():
         total_score = GAME_FONT.render("Your total score is {}min {}secs ({}secs)".format(minutes, seconds, self.score), False, (255, 255, 255))
         total_score_rect = total_score.get_rect(center = (600, 400))
 
+
         for event in pygame.event.get():
             #Quit the game
             if event.type == pygame.QUIT:
@@ -423,6 +430,7 @@ class StageManager():
             #Click to see details
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.state = "scores"
+
 
         display_BG()
         screen.blit(OVER_FONT_SURFACE1, OVER_FONT_RECT1)
@@ -473,7 +481,7 @@ def main():
     game_state = StageManager("intro")
     
     while RUNNING:
-
+        
         game_state.state_manager()
 
         #Event loop
@@ -483,8 +491,8 @@ def main():
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                    if re.match(r'level\dswitch', game_state.state):
-                        game_state.state = "reset{}".format(game_state.level)
+                if re.match(r'level\dswitch', game_state.state):
+                    game_state.state = "reset{}".format(game_state.level)
             #Handle the drag & drop mechanic for NUM_BUTTONS
             if CURRENT_NUM:
                 NUM = CURRENT_NUM
