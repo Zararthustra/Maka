@@ -37,21 +37,19 @@ RESET_RECTB = RESET_SURFACEB.get_rect(center = (900, 35))
 
     #Tuto
 TUTO_IMAGE1 = pygame.image.load('The_good_count/assets/first_tuto.png').convert_alpha()
-TUTO_RECT1 = TUTO_IMAGE1.get_rect()
-TUTO_RECT1.topleft = (3, 3)
+TUTO_RECT1 = TUTO_IMAGE1.get_rect(topleft = (2, 3))
 
 TUTO_IMAGE2 = pygame.image.load('The_good_count/assets/second_tuto.png').convert_alpha()
-TUTO_RECT2 = TUTO_IMAGE2.get_rect()
-TUTO_RECT2.topleft = (3, 3)
+TUTO_RECT2 = TUTO_IMAGE2.get_rect(topleft = (3, 3))
 
 TUTO_IMAGE3 = pygame.image.load('The_good_count/assets/third_tuto.png').convert_alpha()
-TUTO_RECT3 = TUTO_IMAGE3.get_rect()
-TUTO_RECT3.topleft = (3, 3)
+TUTO_RECT3 = TUTO_IMAGE3.get_rect(topleft = (3, 3))
 
 TUTO_IMAGE4 = pygame.image.load('The_good_count/assets/fourth_tuto.png').convert_alpha()
-TUTO_RECT4 = TUTO_IMAGE4.get_rect()
-TUTO_RECT4.topleft = (3, 3)
+TUTO_RECT4 = TUTO_IMAGE4.get_rect(topleft = (3, 3))
 
 TUTO_IMAGE5 = pygame.image.load('The_good_count/assets/fifth_tuto.png').convert_alpha()
-TUTO_RECT5 = TUTO_IMAGE5.get_rect()
-TUTO_RECT5.topleft = (3, 3)
+TUTO_RECT5 = TUTO_IMAGE5.get_rect(topleft = (3, 3))
+
+TUTO_IMAGE6 = pygame.image.load('The_good_count/assets/sixth_tuto.png').convert_alpha()
+TUTO_RECT6 = TUTO_IMAGE6.get_rect(topleft = (3, 3))

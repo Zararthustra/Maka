@@ -7,6 +7,7 @@ import buttons
 from Manager import NumManager
 from fonts import *
 from images import *
+from sounds import *
 import re
 
 
@@ -98,6 +99,7 @@ def collide_nums(goal):
     if CURRENT_OP:
         for other_num in other_nums:
             if CURRENT_NUM.rect.colliderect(other_num.rect):
+                collide_sound.play()
                 if CURRENT_OP == ADD_BUTTON:
                     CURRENT_NUM.num += other_num.num
                 elif CURRENT_OP == SUB_BUTTON:
@@ -269,12 +271,14 @@ class StageManager():
             INTRO_FONT_SURFACE2B = GAME_FONT.render("Start game", False, (200, 200, 200))
             screen.blit(INTRO_FONT_SURFACE2B, INTRO_FONT_RECT2)
             if pygame.mouse.get_pressed()[0] == 1:
+                menu_sound.play()
                 self.state = "level{}switch".format(self.level)
         if INTRO_FONT_RECT3.collidepoint(pos):
             #Mouseover
             INTRO_FONT_SURFACE3B = GAME_FONT.render("Quick tutorial", False, (200, 200, 200))
             screen.blit(INTRO_FONT_SURFACE3B, INTRO_FONT_RECT3)
             if pygame.mouse.get_pressed()[0] == 1:
+                menu_sound.play()
                 self.state = "tuto"
 
     def tuto(self):
@@ -287,9 +291,10 @@ class StageManager():
                 exit()
             #Click to switch pages
             if event.type == pygame.MOUSEBUTTONDOWN:
+                menu_sound.play()
                 self.tuto_page += 1
         #Reset to intro
-        if self.tuto_page == 6:
+        if self.tuto_page == 7:
             self.state = "intro"
             self.tuto_page = 1
 
@@ -304,6 +309,8 @@ class StageManager():
             screen.blit(TUTO_IMAGE4, TUTO_RECT4)
         elif self.tuto_page == 5:
             screen.blit(TUTO_IMAGE5, TUTO_RECT5)
+        elif self.tuto_page == 6:
+            screen.blit(TUTO_IMAGE6, TUTO_RECT6)
 
     def main(self):
         """Main stage"""
@@ -384,6 +391,7 @@ class StageManager():
             if pygame.mouse.get_pressed()[0] == 1:
                 num_group.all_nums.empty()
                 CURRENT_NUM = None
+                reset_sound.play()
                 self.state = "reset{}".format(self.level)
 
     def reset_nums(self, number1, number2, number3, number4, goal):

@@ -2,6 +2,9 @@
 Button module for operators and nums
 """
 import pygame
+from sounds import current_op_sound, current_num_sound
+
+
 pygame.init()
 
 
@@ -31,6 +34,7 @@ class OpButton():
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 action = True
                 self.clicked = True
+                current_op_sound.play()
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
 
@@ -66,6 +70,7 @@ class NumButton(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
+                current_num_sound.play()
                 return self.clicked
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
