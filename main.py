@@ -122,7 +122,7 @@ def timer(state, goal):
     time_init = pygame.time.get_ticks()
     
     #Save tick in variable to set stage timer
-    if re.match(r'level\dswitch', state):
+    if re.match(r'level\d{1,2}switch', state):
         START_TIME = pygame.time.get_ticks()
 
     #Clean stage time from milisecs to secs
@@ -130,7 +130,7 @@ def timer(state, goal):
     
     TIMER_SURFACE = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 30).render("Timer: {}secs".format(stage_timer), False, (200, 200, 200))
     TIMER_RECT = TIMER_SURFACE.get_rect(center = (110, 35))
-    if re.match(r'level\d', state) and not re.match(r'level\dswitch', state):
+    if re.match(r'level\d{1,2}', state) and not re.match(r'level\d{1,2}switch', state):
         screen.blit(TIMER_SURFACE, TIMER_RECT)
 
     if collide_nums(goal) == True:
@@ -258,6 +258,8 @@ class StageManager():
 
     def intro(self):
         """Intro stage"""
+        num_group.all_nums.update()
+        num_group.draw(screen)
         display_BG()
         screen.blit(INTRO_FONT_SURFACE1, INTRO_FONT_RECT1)
         screen.blit(INTRO_FONT_SURFACE2, INTRO_FONT_RECT2)
@@ -278,6 +280,7 @@ class StageManager():
             screen.blit(INTRO_FONT_SURFACE2B, INTRO_FONT_RECT2)
             if pygame.mouse.get_pressed()[0] == 1:
                 menu_sound.play()
+                pygame.mixer.music.stop()
                 self.state = "level1switch"
         if INTRO_FONT_RECT3.collidepoint(pos):
             #Mouseover
@@ -328,6 +331,7 @@ class StageManager():
         #Switch to "won" or "over" state
         if CURRENT_NUM and CURRENT_NUM.num == self.goal:
             if self.level == 10:
+                self.score_list.append(STAGE_TIME)
                 self.state = "overswitch"
             else:
                 self.state = "wonswitch"        
@@ -463,7 +467,6 @@ class StageManager():
                 table_score_rect = table_score.get_rect(topleft = (700, y))
                 screen.blit(table_score, table_score_rect)
                 y += 100
-                pass
             i += 1
         tot = GAME_FONT.render("Total: {}secs".format(self.score), False, (255, 255, 255))
         tot_rect = tot.get_rect(topleft = (400, 550))
@@ -478,6 +481,7 @@ def main():
     global CURRENT_NUM
     global STAGE_TIME
     rectangle_dragging = False
+
     game_state = StageManager("intro")
     
     while RUNNING:
@@ -491,7 +495,7 @@ def main():
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if re.match(r'level\dswitch', game_state.state):
+                if re.match(r'level\d{1,2}switch', game_state.state):
                     game_state.state = "reset{}".format(game_state.level)
             #Handle the drag & drop mechanic for NUM_BUTTONS
             if CURRENT_NUM:
