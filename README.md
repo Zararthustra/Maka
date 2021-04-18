@@ -19,7 +19,7 @@ In order to play it at home, you can download this zip file:
 
 Please dont hesitate to give me feedbacks (bugs, improvements, ...)
 
-*/!\ Requires Windows10 /!\*
+**/!\ Requires Windows10 /!\\**
 
 
 # How to play
