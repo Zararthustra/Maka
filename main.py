@@ -2,7 +2,7 @@
 Main module
 """
 import pygame
-from sys import exit
+import sys
 import buttons
 from Manager import NumManager
 from fonts import *
@@ -128,7 +128,7 @@ def timer(state, goal):
     #Clean stage time from milisecs to secs
     stage_timer = int((time_init - START_TIME) / 1000)
     
-    TIMER_SURFACE = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 30).render("Timer: {}secs".format(stage_timer), False, (200, 200, 200))
+    TIMER_SURFACE = pygame.font.Font('assets/BRITANIC.TTF', 30).render("Timer: {}secs".format(stage_timer), False, (200, 200, 200))
     TIMER_RECT = TIMER_SURFACE.get_rect(center = (110, 35))
     if re.match(r'level\d{1,2}', state) and not re.match(r'level\d{1,2}switch', state):
         screen.blit(TIMER_SURFACE, TIMER_RECT)
@@ -384,7 +384,7 @@ class StageManager():
         rest = self.goal - curr
         result = "Goal: {}          Actual: {}         Rest: {}".format(self.goal, curr, rest)
 
-        font = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 30)
+        font = pygame.font.Font('assets/BRITANIC.TTF', 30)
         surface = font.render(str(result), False, (200, 200, 200))
         rect = surface.get_rect(center = (550, 35))
         screen.blit(surface, rect)

@@ -51,7 +51,7 @@ class NumButton(pygame.sprite.Sprite):
     Define button class for nums
     """
     
-    load_font = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 120)
+    load_font = pygame.font.Font('assets/MAGNETOB.TTF', 120)
 
     def __init__(self, x, y, num):
         """Constructor"""

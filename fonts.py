@@ -1,8 +1,8 @@
 import pygame
 
-TITLE_FONT = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 130)
-LEVEL_FONT = pygame.font.Font('The_good_count/assets/MAGNETOB.TTF', 50)
-GAME_FONT = pygame.font.Font('The_good_count/assets/BRITANIC.TTF', 50)
+TITLE_FONT = pygame.font.Font('assets/MAGNETOB.TTF', 130)
+LEVEL_FONT = pygame.font.Font('assets/MAGNETOB.TTF', 50)
+GAME_FONT = pygame.font.Font('assets/BRITANIC.TTF', 50)
 
 
 # Intro
