@@ -8,15 +8,19 @@ I made this game from scratch, without any A-to-Z tutorial to train my python sk
 
 All assets are homemade, even the final BO music made with FL studio.
 
-# Download it !
+
+# [Download it !](https://github.com/Zararthustra/The_good_count/raw/main/The_good_count_folder.zip)
 
 In order to play it at home, you can download this zip file:
 
 [The good count](https://github.com/Zararthustra/The_good_count/raw/main/The_good_count_folder.zip)
 
 100% safe file, no virus !
+
 Please dont hesitate to give me feedbacks (bugs, improvements, ...)
+
 */!\ Requires Windows10 /!\*
+
 
 # How to play
 
@@ -26,6 +30,7 @@ Please dont hesitate to give me feedbacks (bugs, improvements, ...)
 ![alt text](https://github.com/Zararthustra/Maka/blob/main/assets/fourth_tuto.png)
 ![alt text](https://github.com/Zararthustra/Maka/blob/main/assets/fifth_tuto.png)
 ![alt text](https://github.com/Zararthustra/Maka/blob/main/assets/sixth_tuto.png)
+
 
 # Known bugs
 
