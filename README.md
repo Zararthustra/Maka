@@ -4,7 +4,7 @@
 
 This is an ersatz of the well known game, made with Python and the pygame library.
 
-I made this game from scratch, without any A to Z tuto to train my python skills.
+I made this game from scratch, without any A-to-Z tutorial to train my python skills.
 
 All assets are homemade, even the final BO music made with FL studio.
 
@@ -26,3 +26,8 @@ Please dont hesitate to give me feedbacks (bugs, improvements, ...)
 ![alt text](https://github.com/Zararthustra/Maka/blob/main/assets/fourth_tuto.png)
 ![alt text](https://github.com/Zararthustra/Maka/blob/main/assets/fifth_tuto.png)
 ![alt text](https://github.com/Zararthustra/Maka/blob/main/assets/sixth_tuto.png)
+
+# Known bugs
+
+- You have to press start twice to get into Level 1
+- If you drag & drop too fast, it might appears a 0 or a wrong result
