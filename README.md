@@ -1,6 +1,6 @@
 # The good count
 
-**[Side project]** A little game managing basic calculation to train your math skills !
+**[Side project]** A little game with 10 levels managing basic calculation to train your math skills !
 
 This is an ersatz of the well known game, made with Python and the pygame library.
 
