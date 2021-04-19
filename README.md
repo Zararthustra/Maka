@@ -11,15 +11,18 @@ All assets are homemade, even the final BO music made with FL studio.
 
 # [Download it !](https://github.com/Zararthustra/The_good_count/raw/main/The_good_count_folder.zip)
 
-In order to play it at home, you can download this zip file:
+In order to play it at home, follow these steps:
 
-[The good count](https://github.com/Zararthustra/The_good_count/raw/main/The_good_count_folder.zip) (First you need to unzip this folder, then run as administrator the executable file located into the unzipped folder)
+* Download the file [here](https://github.com/Zararthustra/The_good_count/raw/main/The_good_count_folder.zip)
+* Unzip the folder wherever you want (right click on folder, then unzip it to your desktop for example)
+* Then, go into the unzipped folder
+* Finnally, run the file "The good count" as administrator
 
 100% safe file, no virus !
 
 Please dont hesitate to give me feedbacks (bugs, improvements, ...)
 
-**/!\ Requires Windows10 /!\\**
+**/!\ Requires Windows /!\\**
 
 
 # How to play
